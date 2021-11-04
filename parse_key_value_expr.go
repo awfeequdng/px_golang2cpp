@@ -10,7 +10,7 @@ func ParseKeyValueExpr(key_value_expr *ast.KeyValueExpr) string {
 	val := key_value_expr.Value
 	var ret string
 	ret += "{"
-	ret += ParseExpr(key) + " : "
+	ret += ParseExpr(key) + " , "
 	ret += ParseExpr(val) + "},"
 	return ret
 }

@@ -13,7 +13,8 @@ func ParseImport(decl *ast.GenDecl) []string {
 		}
 	}
 	for _, name := range names {
-		ret = append(ret, "#include " + name);
+		// do not include this import pack
+		ret = append(ret, "// #include " + name);
 	}
 	return ret
 }

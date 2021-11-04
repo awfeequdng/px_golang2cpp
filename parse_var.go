@@ -79,13 +79,13 @@ func genTypeValues(name string, tvalue type_value) string {
 	switch tvalue.var_type {
 	case VAR_ARRAY_TYPE:
 		ret = tvalue.tname + " " + name + "[]" + strings.Join(tvalue.values, "\n")
-		break
+
 	case VAR_MAP_TYPE:
-		ret = tvalue.tname + " " + name + strings.Join(tvalue.values, "\n");
-		break
+		ret = tvalue.tname + " " + name + strings.Join(tvalue.values, "\n")
+
 	case VAR_NORMAL_TYPE:
-		ret = tvalue.tname + " " + name + "=" + strings.Join(tvalue.values, "\n")
-		break
+		ret = tvalue.tname + " " + name + "=" + strings.Join(tvalue.values, "\n") + ";"
+
 	case VAR_NONE_TYPE:
 		_, file, line, _ := runtime.Caller(0)
 		log.Fatal("INVALID VAR TYPE" + file + ", lien: " + strconv.Itoa(line))

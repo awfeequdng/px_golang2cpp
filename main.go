@@ -65,6 +65,11 @@ func main() {
 
 func parseGolang(f *ast.File) []string {
 	var ret []string
+	ret = append(ret, "#include <unordered_map>")
+	ret = append(ret, "#include <string>")
+	ret = append(ret, "#include <iostream>")
+	ret = append(ret, "using namespace std;")
+
 	for _, decl := range f.Decls {
 		if g, ok := decl.(*ast.GenDecl); ok {
 			switch g.Tok {
@@ -86,6 +91,9 @@ func parseGolang(f *ast.File) []string {
 			}
 		}
 	}
+	ret = append(ret, "int main() {")
+	ret = append(ret, "\tstd::cout << \"hello world\" << std::endl;")
+	ret = append(ret, "}\n")
 
 	return ret
 }
