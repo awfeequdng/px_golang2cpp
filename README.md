@@ -21,26 +21,48 @@ convert go to cpp
 ### build the created cpp source file
 - we now have the test.cc file, then we can execute the command like this: `g++ test.cc`
 - if there have no error in building the cpp file `test.cc`, then we get the correct cpp source form go
-  
+
 ### notice
-- the created cpp source file is just for testing, and some converted code build failed dure to lack of dependence file. 
+- the created cpp source file is just for testing, and some converted code build failed dure to lack of dependence file.
 
 # example
-- convert var in go to cpp: 
+- convert var in go to cpp: `./main test/var_test.go -o var_test.cc`
+
 // var_test.go
 ```
-  var (
-	switchExpressionCounter = -1
-	firstCase               bool
-	switchLabel             string
-	labelCounter            int
-	iotaNumber              int // used for simple increases of iota constants
-	deferCounter            int
-	unfinishedDeferFunction bool
-)
+	var endings = []string{"{", ",", "}", ":"}
+
+	var test = -1
+	var test1 = 2
+
+	var g1, g2 = 23, "fjdd"
+
+	var (
+		switchExpressionCounter = -1
+		firstCase               bool
+		switchLabel             string
+		labelCounter            int
+		iotaNumber              int // used for simple increases of iota constants
+		deferCounter            int
+		unfinishedDeferFunction bool
+	)
+
+	var globalObjectMap map[string]string
+
 ```
+
 // var_test.cc
 ```
+std::vector<string> endings{
+"{",
+",",
+"}",
+":",
+};
+auto  test = (-1);
+auto  test1 = 2;
+auto  g1 = 23;
+auto  g2 = "fjdd";
 auto  switchExpressionCounter = (-1);
 bool firstCase{};
 string switchLabel{};
@@ -48,4 +70,94 @@ int labelCounter{};
 int iotaNumber{};
 int deferCounter{};
 bool unfinishedDeferFunction{};
-``  
+```
+notice: cpp code not format yet(we will do it later).
+
+- convert go map to cpp unordered_map: `./main test/map_test.go -o map_test.cc`
+
+// map_test.go
+```
+	var includeFileMap map[string]string = make(map[string]string)
+
+	var includeMap = map[string]string{
+		"std::tuple":                       "tuple",
+		"std::endl":                        "iostream",
+		"std::cout":                        "iostream",
+		"std::string":                      "string",
+		"std::size":                        "iterator",
+		"std::unordered_map":               "unordered_map",
+		"std::hash":                        "functional",
+		"std::size_t":                      "cstddef",
+		"std::int8_t":                      "cinttypes",
+		"std::int16_t":                     "cinttypes",
+		"std::int32_t":                     "cinttypes",
+		"std::int64_t":                     "cinttypes",
+		"std::uint8_t":                     "cinttypes",
+		"std::uint16_t":                    "cinttypes",
+		"std::uint32_t":                    "cinttypes",
+		"std::uint64_t":                    "cinttypes",
+		"printf":                           "cstdio",
+		"fprintf":                          "cstdio",
+		"sprintf":                          "cstdio",
+		"snprintf":                         "cstdio",
+		"std::stringstream":                "sstream",
+		"std::is_pointer":                  "type_traits",
+		"std::experimental::is_detected_v": "experimental/type_traits",
+		"std::shared_ptr":                  "memory",
+		"std::nullopt":                     "optional",
+		"EXIT_SUCCESS":                     "cstdlib",
+		"EXIT_FAILURE":                     "cstdlib",
+		"std::vector":                      "vector",
+		"std::unique_ptr":                  "memory",
+		"std::runtime_error":               "stdexcept",
+		"std::regex_replace":               "regex",
+		"std::regex_constants":             "regex",
+		"std::to_string":                   "string",
+		// TODO: complex64, complex128
+	}
+
+	var testMap map[string]string
+```
+
+// map_test.cc
+```
+std::unordered_map<string,string> includeFileMap = {};
+std::unordered_map<string,string> includeMap{
+{"std::tuple" , "tuple"},
+{"std::endl" , "iostream"},
+{"std::cout" , "iostream"},
+{"std::string" , "string"},
+{"std::size" , "iterator"},
+{"std::unordered_map" , "unordered_map"},
+{"std::hash" , "functional"},
+{"std::size_t" , "cstddef"},
+{"std::int8_t" , "cinttypes"},
+{"std::int16_t" , "cinttypes"},
+{"std::int32_t" , "cinttypes"},
+{"std::int64_t" , "cinttypes"},
+{"std::uint8_t" , "cinttypes"},
+{"std::uint16_t" , "cinttypes"},
+{"std::uint32_t" , "cinttypes"},
+{"std::uint64_t" , "cinttypes"},
+{"printf" , "cstdio"},
+{"fprintf" , "cstdio"},
+{"sprintf" , "cstdio"},
+{"snprintf" , "cstdio"},
+{"std::stringstream" , "sstream"},
+{"std::is_pointer" , "type_traits"},
+{"std::experimental::is_detected_v" , "experimental/type_traits"},
+{"std::shared_ptr" , "memory"},
+{"std::nullopt" , "optional"},
+{"EXIT_SUCCESS" , "cstdlib"},
+{"EXIT_FAILURE" , "cstdlib"},
+{"std::vector" , "vector"},
+{"std::unique_ptr" , "memory"},
+{"std::runtime_error" , "stdexcept"},
+{"std::regex_replace" , "regex"},
+{"std::regex_constants" , "regex"},
+{"std::to_string" , "string"},
+};
+std::unordered_map<string,string> testMap{};
+```
+
+notice: not format yet
