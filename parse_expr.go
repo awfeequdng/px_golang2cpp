@@ -86,6 +86,8 @@ func ParseExpr(expr ast.Expr) string {
 		return ParseArrayType(expr.(*ast.ArrayType))
 	case *ast.MapType:
 		return ParseMapType(expr.(*ast.MapType))
+	// case *ast.Field:
+	// 	return ParseField(expr.(*ast.Field))
 	}
 
 
