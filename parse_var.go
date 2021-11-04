@@ -96,11 +96,10 @@ func genTypeValues(name string, tvalue type_value) string {
 
 func ParseVar(decl *ast.GenDecl) []string {
 	var ret []string
-	var names []string
-
-	var tvalues []type_value
 	for _, spec := range decl.Specs {
 		if vs, ok := spec.(*ast.ValueSpec); ok {
+			var names []string
+			var tvalues []type_value
 			for _, name := range vs.Names {
 				names = append(names, name.Name)
 			}
@@ -118,14 +117,37 @@ func ParseVar(decl *ast.GenDecl) []string {
 					tvalues = append(tvalues, tv)
 				}
 			}
+
 			if len(names) == len(tvalues) {
 				for i, name := range names {
 					ret = append(ret, genTypeValues(name, tvalues[i]))
 				}
 			} else if (len(names) == 1 && len(tvalues) > 0) {
 				log.Fatal("NOT IMPLEMENTED YET")
-			} else {
-				log.Fatal("invalid names and values size")
+			} else if len(tvalues) == 0 {
+				// have name and type
+				if vs.Type == nil {
+					log.Fatal("can not be nil when values is nil")
+				}
+				if ident, ok := vs.Type.(*ast.Ident); ok {
+					typ := VAR_NORMAL_TYPE
+					tname := ident.Name
+					vals := []string{"{}"}
+					tv := type_value{typ, tname, vals}
+					// tvalues = append(tvalues, tv)
+					for _, name := range names {
+						ret = append(ret, genTypeValues(name, tv))
+					}
+				} else {
+					log.Fatal("type must be ast.Ident")
+				}
+ 			} else {
+				 log.Print("names: " + strings.Join(names, ","))
+				 log.Print("values: ")
+				 for _, v := range tvalues {
+					 log.Print(strings.Join(v.values, " "))
+				 }
+				log.Fatal("invalid names and values size , name size: " + strconv.Itoa(len(names)) + ", value size: " + strconv.Itoa(len(tvalues)))
 			}
 		} else {
 			log.Fatal("NOT IMPLEMENTED YET")
