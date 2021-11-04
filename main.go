@@ -15,6 +15,8 @@ import (
 
 const version = "golang2cpp 0.1"
 
+var includeFileMap map[string]string = make(map[string]string)
+
 func main() {
 	inputFilename := ""
 	outputFilename := ""
@@ -67,6 +69,7 @@ func parseGolang(f *ast.File) []string {
 	var ret []string
 	ret = append(ret, "#include <unordered_map>")
 	ret = append(ret, "#include <string>")
+	ret = append(ret, "#include <vector>")
 	ret = append(ret, "#include <iostream>")
 	ret = append(ret, "using namespace std;")
 
@@ -79,23 +82,27 @@ func parseGolang(f *ast.File) []string {
 				ret = append(ret, ParseConst(g)...)
 			case token.VAR:
 				ret = append(ret, ParseVar(g)...)
-				break
 			case token.TYPE:
 				ret = append(ret, ParseType(g)...)
-				break
-			case token.FUNC:
-				ret = append(ret, ParseFunc(g)...)
-				break
 			default:
 				log.Fatal("invalid genDecl token type")
 			}
+		}
+		if g, ok := decl.(*ast.FuncDecl); ok {
+			ret = append(ret, ParseFuncDecl(g)...)
 		}
 	}
 	ret = append(ret, "int main() {")
 	ret = append(ret, "\tstd::cout << \"hello world\" << std::endl;")
 	ret = append(ret, "}\n")
 
-	return ret
+	var includes []string
+	for _, v := range includeFileMap {
+		includes = append(includes, "#include <" + v + ">")
+	}
+	includes = append(includes, ret...)
+
+	return includes
 }
 
 func golang2cpp(file, source string) string {

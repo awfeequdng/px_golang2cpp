@@ -37,8 +37,7 @@ func ParseExpr(expr ast.Expr) string {
 		paren_expr := expr.(*ast.ParenExpr)
 		return "(" + ParseExpr(paren_expr.X) + ")"
 	case *ast.SelectorExpr:
-	// Walk(v, n.X)
-	// Walk(v, n.Sel)
+		return ParseSelectorExpr(expr.(*ast.SelectorExpr))
 
 	case *ast.IndexExpr:
 	// Walk(v, n.X)
@@ -67,6 +66,7 @@ func ParseExpr(expr ast.Expr) string {
 	// walkExprList(v, n.Args)
 
 	case *ast.StarExpr:
+		return ParseStarExpr(expr.(*ast.StarExpr))
 	// Walk(v, n.X)
 
 	case *ast.UnaryExpr:
@@ -83,7 +83,12 @@ func ParseExpr(expr ast.Expr) string {
 	// Walk(v, n.Key)
 	// Walk(v, n.Value)
 
+	case *ast.ArrayType:
+		return ParseArrayType(expr.(*ast.ArrayType))
+	case *ast.MapType:
+		return ParseMapType(expr.(*ast.MapType))
 	}
+
 
 	return ""
 }
