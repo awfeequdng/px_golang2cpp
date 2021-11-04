@@ -24,3 +24,28 @@ convert go to cpp
   
 ### notice
 - the created cpp source file is just for testing, and some converted code build failed dure to lack of dependence file. 
+
+# example
+- convert var in go to cpp:
+// var_test.go
+```
+  var (
+	switchExpressionCounter = -1
+	firstCase               bool
+	switchLabel             string
+	labelCounter            int
+	iotaNumber              int // used for simple increases of iota constants
+	deferCounter            int
+	unfinishedDeferFunction bool
+)
+```
+// var_test.cc
+```
+auto  switchExpressionCounter = (-1);
+bool firstCase{};
+string switchLabel{};
+int labelCounter{};
+int iotaNumber{};
+int deferCounter{};
+bool unfinishedDeferFunction{};
+``  
