@@ -26,7 +26,7 @@ convert go to cpp
 - the created cpp source file is just for testing, and some converted code build failed dure to lack of dependence file. 
 
 # example
-- convert var in go to cpp:
+- convert var in go to cpp: 
 // var_test.go
 ```
   var (
