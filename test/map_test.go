@@ -1,4 +1,4 @@
-package test
+package map_test
 
 var includeFileMap map[string]string = make(map[string]string)
 

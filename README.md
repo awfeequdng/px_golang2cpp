@@ -30,28 +30,30 @@ convert go to cpp
 
 // var_test.go
 ```
-	var endings = []string{"{", ",", "}", ":"}
+package var_test
 
-	var test = -1
-	var test1 = 2
+var endings = []string{"{", ",", "}", ":"}
 
-	var g1, g2 = 23, "fjdd"
+var test = -1
+var test1 = 2
 
-	var (
-		switchExpressionCounter = -1
-		firstCase               bool
-		switchLabel             string
-		labelCounter            int
-		iotaNumber              int // used for simple increases of iota constants
-		deferCounter            int
-		unfinishedDeferFunction bool
-	)
+var g1, g2 = 23, "fjdd"
 
-	var globalObjectMap map[string]string
+var (
+	switchExpressionCounter = -1
+	firstCase               bool
+	switchLabel             string
+	labelCounter            int
+	iotaNumber              int // used for simple increases of iota constants
+	deferCounter            int
+	unfinishedDeferFunction bool
+)
+
+var globalObjectMap map[string]string
 
 ```
 
-// var_test.cc
+// var_test.cc (this is part of code)
 ```
 std::vector<string> endings{
 "{",
@@ -77,49 +79,51 @@ notice: cpp code not format yet(we will do it later).
 
 // map_test.go
 ```
-	var includeFileMap map[string]string = make(map[string]string)
+package map_test
 
-	var includeMap = map[string]string{
-		"std::tuple":                       "tuple",
-		"std::endl":                        "iostream",
-		"std::cout":                        "iostream",
-		"std::string":                      "string",
-		"std::size":                        "iterator",
-		"std::unordered_map":               "unordered_map",
-		"std::hash":                        "functional",
-		"std::size_t":                      "cstddef",
-		"std::int8_t":                      "cinttypes",
-		"std::int16_t":                     "cinttypes",
-		"std::int32_t":                     "cinttypes",
-		"std::int64_t":                     "cinttypes",
-		"std::uint8_t":                     "cinttypes",
-		"std::uint16_t":                    "cinttypes",
-		"std::uint32_t":                    "cinttypes",
-		"std::uint64_t":                    "cinttypes",
-		"printf":                           "cstdio",
-		"fprintf":                          "cstdio",
-		"sprintf":                          "cstdio",
-		"snprintf":                         "cstdio",
-		"std::stringstream":                "sstream",
-		"std::is_pointer":                  "type_traits",
-		"std::experimental::is_detected_v": "experimental/type_traits",
-		"std::shared_ptr":                  "memory",
-		"std::nullopt":                     "optional",
-		"EXIT_SUCCESS":                     "cstdlib",
-		"EXIT_FAILURE":                     "cstdlib",
-		"std::vector":                      "vector",
-		"std::unique_ptr":                  "memory",
-		"std::runtime_error":               "stdexcept",
-		"std::regex_replace":               "regex",
-		"std::regex_constants":             "regex",
-		"std::to_string":                   "string",
-		// TODO: complex64, complex128
-	}
+var includeFileMap map[string]string = make(map[string]string)
 
-	var testMap map[string]string
+var includeMap = map[string]string{
+	"std::tuple":                       "tuple",
+	"std::endl":                        "iostream",
+	"std::cout":                        "iostream",
+	"std::string":                      "string",
+	"std::size":                        "iterator",
+	"std::unordered_map":               "unordered_map",
+	"std::hash":                        "functional",
+	"std::size_t":                      "cstddef",
+	"std::int8_t":                      "cinttypes",
+	"std::int16_t":                     "cinttypes",
+	"std::int32_t":                     "cinttypes",
+	"std::int64_t":                     "cinttypes",
+	"std::uint8_t":                     "cinttypes",
+	"std::uint16_t":                    "cinttypes",
+	"std::uint32_t":                    "cinttypes",
+	"std::uint64_t":                    "cinttypes",
+	"printf":                           "cstdio",
+	"fprintf":                          "cstdio",
+	"sprintf":                          "cstdio",
+	"snprintf":                         "cstdio",
+	"std::stringstream":                "sstream",
+	"std::is_pointer":                  "type_traits",
+	"std::experimental::is_detected_v": "experimental/type_traits",
+	"std::shared_ptr":                  "memory",
+	"std::nullopt":                     "optional",
+	"EXIT_SUCCESS":                     "cstdlib",
+	"EXIT_FAILURE":                     "cstdlib",
+	"std::vector":                      "vector",
+	"std::unique_ptr":                  "memory",
+	"std::runtime_error":               "stdexcept",
+	"std::regex_replace":               "regex",
+	"std::regex_constants":             "regex",
+	"std::to_string":                   "string",
+	// TODO: complex64, complex128
+}
+
+var testMap map[string]string
 ```
 
-// map_test.cc
+// map_test.cc (this is part of code)
 ```
 std::unordered_map<string,string> includeFileMap = {};
 std::unordered_map<string,string> includeMap{

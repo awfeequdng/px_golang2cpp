@@ -1,6 +1,5 @@
 package var_test
 
-
 var endings = []string{"{", ",", "}", ":"}
 
 var test = -1
