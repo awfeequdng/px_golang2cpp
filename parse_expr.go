@@ -62,8 +62,7 @@ func ParseExpr(expr ast.Expr) string {
 	// }
 
 	case *ast.CallExpr:
-	// Walk(v, n.Fun)
-	// walkExprList(v, n.Args)
+		return ParseCallExpr(expr.(*ast.CallExpr))
 
 	case *ast.StarExpr:
 		return ParseStarExpr(expr.(*ast.StarExpr))

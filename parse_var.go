@@ -16,16 +16,6 @@ const (
 	VAR_NONE_TYPE
 )
 
-func ParseMapType(Type *ast.MapType) string {
-	key := ParseExpr(Type.Key)
-	val := ParseExpr(Type.Value)
-
-	ret := "std::unordered_map<" + key + "," + val + "> "
-
-	return ret
-}
-
-
 // func ParseArrayType(Type *ast.ArrayType, Elts []ast.Expr) (tname string, values []string) {
 
 // 	values = append(values, "{");
@@ -87,6 +77,18 @@ func ParseVar(decl *ast.GenDecl) []string {
 			for _, value := range vs.Values {
 				if cl, ok := value.(*ast.CompositeLit); ok {
 					typ, tname, vals := ParseCompositeLit(cl)
+					tv := type_value{typ, tname, vals}
+					tvalues = append(tvalues, tv)
+				} else if _, ok := value.(*ast.CallExpr); ok {
+					typ := VAR_NORMAL_TYPE
+					var tname string
+					if vs.Type == nil {
+						tname = "auto"
+					} else {
+						tname = ParseExpr(vs.Type)
+					}
+					var vals []string
+					vals = append(vals, ParseExpr(value))
 					tv := type_value{typ, tname, vals}
 					tvalues = append(tvalues, tv)
 				} else {
