@@ -24,6 +24,7 @@ func ParseStmt(stmt *ast.Stmt) []string {
 		case *ast.EmptyStmt:
 		case *ast.LabeledStmt:
 		case *ast.ExprStmt:
+			ret = append(ret, ParseExprStmt((*stmt).(*ast.ExprStmt))...)
 		case *ast.SendStmt:
 		case *ast.IncDecStmt:
 		case *ast.AssignStmt:
@@ -38,7 +39,9 @@ func ParseStmt(stmt *ast.Stmt) []string {
 		case *ast.IfStmt:
 			ret = append(ret, ParseIfStmt((*stmt).(*ast.IfStmt))...)
 		case *ast.CaseClause:
+			ret = append(ret, ParseCaseClause((*stmt).(*ast.CaseClause))...)
 		case *ast.SwitchStmt:
+			ret = append(ret, ParseSwitchStmt((*stmt).(*ast.SwitchStmt))...)
 		case *ast.TypeSwitchStmt:
 		case *ast.CommClause:
 		case *ast.SelectStmt:
