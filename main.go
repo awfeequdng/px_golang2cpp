@@ -75,18 +75,7 @@ func parseGolang(f *ast.File) []string {
 
 	for _, decl := range f.Decls {
 		if g, ok := decl.(*ast.GenDecl); ok {
-			switch g.Tok {
-			case token.IMPORT:
-				ret = append(ret, ParseImport(g)...)
-			case token.CONST:
-				ret = append(ret, ParseConst(g)...)
-			case token.VAR:
-				ret = append(ret, ParseVar(g)...)
-			case token.TYPE:
-				ret = append(ret, ParseType(g)...)
-			default:
-				log.Fatal("invalid genDecl token type")
-			}
+			ret = append(ret, ParseGenDecl(g)...)
 		}
 		if g, ok := decl.(*ast.FuncDecl); ok {
 			ret = append(ret, ParseFuncDecl(g)...)

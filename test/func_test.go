@@ -7,6 +7,7 @@ import (
 
 func ParseFuncDecl(decl *ast.FuncDecl) []string {
 	var ret []string
+
 	name := decl.Name.Name
 	func_type := decl.Type
 	params := ParseFieldList(func_type.Params)
@@ -17,16 +18,17 @@ func ParseFuncDecl(decl *ast.FuncDecl) []string {
 	return ret
 }
 
-
 func ParseFuncDecl1(decl *ast.FuncDecl) (string, string) {
 	var ret []string
+	var v1, v2, v3 string
+	v1, v2, v3 = GetThreeValue()
 
 	return ret
 }
 
 
-func ParseFuncDecl2(decl *ast.FuncDecl) (string, string, int, float64) {
-	var ret []string
+// func ParseFuncDecl2(decl *ast.FuncDecl) (string, string, int, float64) {
+// 	var ret []string
 
-	return ret
-}
+// 	return ret
+// }
