@@ -20,35 +20,48 @@ import (
 //		log.Print("invalid id: " + strconv.Itoa(id))
 //	}
 //}
-
-func TestSwitchStmt1(t int) int {
-	switch id := 12; id  {
-	case 2:
-		t = id + 2
-	case 12:
-		t = id + 10
-		fmt.Println("Good morning!")
-	default:
-		t = id
-	}
-	t = t + 2
-	return t
-}
-
-func noConditionSwitch() {
-	hour := time.Now().Hour()
-	switch {
-	case hour < 12:
-		fmt.Println("Good morning!")
-		cc := 3
-	case hour < 17:
-		fmt.Println("Good afternoon!")
-		fmt.Println("Good afternoon1!")
-	default:
-		fmt.Println("Good evening!")
-	}
-}
 //
+//func TestSwitchStmt1(t int) int {
+//	switch id := 12; id  {
+//	case 2:
+//		t = id + 2
+//	case 12:
+//		t = id + 10
+//		fmt.Println("Good morning!")
+//	default:
+//		t = id
+//	}
+//	t = t + 2
+//	return t
+//}
+//
+//func noConditionSwitch() {
+//	hour := time.Now().Hour()
+//	switch {
+//	case hour < 12:
+//		fmt.Println("Good morning!")
+//		cc := 3
+//	case hour < 17:
+//		fmt.Println("Good afternoon!")
+//		fmt.Println("Good afternoon1!")
+//	default:
+//		fmt.Println("Good evening!")
+//	}
+//}
+
+func ParseFallThroughSwitchStmt(switch_stmt *ast.SwitchStmt) string {
+	id := 2
+	switch id {
+	case 1:
+		log.Print("id = 1")
+		fallthrough
+	case 2:
+		log.Print("id = 2")
+	}
+
+	//return []string{""}
+	return ""
+}
 //
 //func ParseNoConditionSwitchStmt(switch_stmt *ast.SwitchStmt) [] string {
 //	var ret []string

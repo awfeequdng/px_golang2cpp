@@ -34,6 +34,7 @@ func ParseStmt(stmt *ast.Stmt) []string {
 		case *ast.ReturnStmt:
 			ret = append(ret, ParseReturnStmt((*stmt).(*ast.ReturnStmt))...)
 		case *ast.BranchStmt:
+			ret = append(ret, ParseBranchStmt((*stmt).(*ast.BranchStmt))...)
 		case *ast.BlockStmt:
 			ret = append(ret, ParseBlockStmt((*stmt).(*ast.BlockStmt))...)
 		case *ast.IfStmt:
