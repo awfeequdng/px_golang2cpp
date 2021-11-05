@@ -13,7 +13,7 @@ func ParseFuncDecl(decl *ast.FuncDecl) []string {
 	func_type := decl.Type
 	params := ParseFieldList(func_type.Params)
 	results := ParseFieldList(func_type.Results)
-	signature := name + "(" + strings.Join(params, " ") + ")"
+	signature := name + "(" + strings.Join(params, ",") + ")"
 	if len(results) == 0 {
 		ret = append(ret, "void " + signature)
 	} else if len(results) == 1 {

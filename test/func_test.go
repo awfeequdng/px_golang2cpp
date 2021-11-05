@@ -23,6 +23,9 @@ func ParseFuncDecl1(decl *ast.FuncDecl) (string, string) {
 	var v1, v2, v3 string
 	v1, v2, v3 = GetThreeValue()
 
+	if _, st := GenInit(); st {
+
+	}
 	return ret
 }
 
