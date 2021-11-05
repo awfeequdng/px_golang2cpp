@@ -6,7 +6,9 @@ convert go to cpp
 - convert 'var test = 2' to 'auto test = 2;'
 - convert 'var test []string' to 'vector<string> test{};'
 - convert 'var test map[int]string' to std::unordered_map<int,string> test{};
-
+- parse if-else statement
+- parse switch-case statement
+- parse some simple function which only have if-else or switch-case statement, and also include return statement 
 # usage
 ### clone source code
 - git clone git@github.com:awfeequdng/px_golang2cpp.git
