@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"fmt"
 	"go/ast"
 	"go/parser"
@@ -30,8 +29,7 @@ func main() {
 			fmt.Println("supported arguments:")
 			fmt.Println(" a .go file as the first argument")
 			fmt.Println("supported options:")
-			fmt.Println(" -o : Format with clang format")
-			fmt.Println(" -O : Don't format with clang format")
+			fmt.Println(" -o : indicate the output file")
 			return
 		}
 		inputFilename = os.Args[1]
@@ -56,6 +54,8 @@ func main() {
 	}
 
 	cppSource := golang2cpp(inputFilename, string(sourceData))
+
+	cppSource = FormatCode(cppSource)
 
 	if outputFilename != "" {
 		err = ioutil.WriteFile(outputFilename, []byte(cppSource), 0755)
@@ -106,9 +106,9 @@ func golang2cpp(file, source string) string {
 	}
 
 	// ast.Print(prog.fset, pkg)
-	buf := new(bytes.Buffer)
-	ast.Fprint(buf, prog.fset, f, ast.NotNilFilter)
-	println(buf.String())
+	//buf := new(bytes.Buffer)
+	//ast.Fprint(buf, prog.fset, f, ast.NotNilFilter)
+	//println(buf.String())
 
 	ret := parseGolang(f)
     return strings.Join(ret, "\n")

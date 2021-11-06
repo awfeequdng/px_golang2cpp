@@ -74,7 +74,7 @@ bbb:
 	//return []string{""}
 	bb:
 	return ""
-	
+
 }
 //
 //func ParseNoConditionSwitchStmt(switch_stmt *ast.SwitchStmt) [] string {
