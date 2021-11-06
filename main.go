@@ -11,6 +11,8 @@ import (
 	"log"
 	"os"
 	"strings"
+
+	//	"strings"
 )
 
 const version = "golang2cpp 0.1"
@@ -106,10 +108,10 @@ func golang2cpp(file, source string) string {
 	// ast.Print(prog.fset, pkg)
 	buf := new(bytes.Buffer)
 	ast.Fprint(buf, prog.fset, f, ast.NotNilFilter)
-	print(buf.String())
+	println(buf.String())
 
 	ret := parseGolang(f)
-	return strings.Join(ret, "\n")
+    return strings.Join(ret, "\n")
 }
 
 type Program struct {

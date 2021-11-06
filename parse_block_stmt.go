@@ -19,10 +19,13 @@ func ParseStmt(stmt *ast.Stmt) []string {
 	var ret []string
 	switch (*stmt).(type) {
 		case *ast.BadStmt:
+			log.Fatal("bad statement")
 		case *ast.DeclStmt:
 			ret = append(ret, ParseDeclStmt((*stmt).(*ast.DeclStmt))...)
 		case *ast.EmptyStmt:
+			// do nothing
 		case *ast.LabeledStmt:
+			ret = append(ret, ParseLabeledStmt((*stmt).(*ast.LabeledStmt))...)
 		case *ast.ExprStmt:
 			ret = append(ret, ParseExprStmt((*stmt).(*ast.ExprStmt))...)
 		case *ast.SendStmt:

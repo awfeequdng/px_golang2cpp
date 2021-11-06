@@ -13,8 +13,15 @@ func ParseAssignStmt(assign_stmt *ast.AssignStmt) []string {
 	switch assign_stmt.Tok {
 		case token.DEFINE:
 		case token.ASSIGN:
+		case token.ADD_ASSIGN:
+		case token.SUB_ASSIGN:
+		case token.MUL_ASSIGN:
+		case token.QUO_ASSIGN:
+		case token.REM_ASSIGN:
+		case token.AND_ASSIGN:
+		case token.OR_ASSIGN:
 		default:
-			log.Fatal("only support ':=' and '=' assignment, not support: " + assign_stmt.Tok.String())
+			log.Fatal("do not support, token = " + assign_stmt.Tok.String())
 	}
 
 	for _, lhs := range assign_stmt.Lhs {
@@ -46,9 +53,25 @@ func ParseAssignStmt(assign_stmt *ast.AssignStmt) []string {
 		case token.DEFINE:
 			ret = append(ret, "auto " + name + " = " + value + ";")
 		case token.ASSIGN:
-			ret = append(ret, name + " = " + value + ";")
+			fallthrough
+		case token.ADD_ASSIGN:
+			fallthrough
+		case token.SUB_ASSIGN:
+			fallthrough
+		case token.MUL_ASSIGN:
+			fallthrough
+		case token.QUO_ASSIGN:
+			fallthrough
+		case token.REM_ASSIGN:
+			fallthrough
+		case token.AND_ASSIGN:
+			fallthrough
+		case token.OR_ASSIGN:
+			ret = append(ret, name + assign_stmt.Tok.String() + value + ";")
+		default:
+			log.Fatal("not support assign operation, token = " + assign_stmt.Tok.String())
 		}
-	} else {
+	} else if assign_stmt.Tok == token.DEFINE || assign_stmt.Tok == token.ASSIGN {
 		for id, n := range names {
 			if id == 0 {
 				name += n
@@ -60,7 +83,7 @@ func ParseAssignStmt(assign_stmt *ast.AssignStmt) []string {
 			if id == 0 {
 				value += v
 			} else {
-				name += ", " + v
+				value += ", " + v
 			}
 		}
 		switch assign_stmt.Tok {
@@ -68,8 +91,12 @@ func ParseAssignStmt(assign_stmt *ast.AssignStmt) []string {
 			ret = append(ret, "auto [" + name + "] = " + value + ";")
 		case token.ASSIGN:
 			includeFileMap["std::tie"] = "tuple"
-			ret = append(ret, "std::tie(" + name + ") = " + value + ";")
+			ret = append(ret, "std::tie(" + name + ") = {" + value + "};")
+		default:
+			log.Fatal("NOT SUPPORT MULTI VALUE ASSIGN, token = " + assign_stmt.Tok.String())
 		}
+	} else {
+		log.Fatal("NOT SUPPORT MULTI VALUE ASSIGN, token = " + assign_stmt.Tok.String())
 	}
 
 	return ret

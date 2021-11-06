@@ -11,11 +11,26 @@ func ParseBranchStmt(stmt *ast.BranchStmt) []string {
 	//BREAK, CONTINUE, GOTO, FALLTHROUGH
 	switch stmt.Tok {
 	case token.BREAK:
-		log.Fatal("not implemented BREAK")
+		//log.Fatal("not implemented BREAK")
+		if stmt.Label != nil {
+			label := stmt.Label.Name
+			ret = append(ret, "goto " + label + ";")
+		} else {
+			ret = append(ret, "break;")
+		}
 	case token.GOTO:
-		log.Fatal("not implemented GOTO")
+		if stmt.Label != nil {
+			label := stmt.Label.Name
+			ret = append(ret, "goto " + label + ";")
+		} else {
+			log.Fatal("implement GOTO error: no label")
+		}
 	case token.CONTINUE:
-		log.Fatal("not implemented CONTINUE")
+		if stmt.Label != nil {
+			log.Fatal("implement CONTINUE error: do not use label in continue")
+		} else {
+			ret = append(ret, "continue;")
+		}
 	case token.FALLTHROUGH:
 		ret = append(ret, "[[fallthrough]];")
 	default:

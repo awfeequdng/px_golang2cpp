@@ -49,18 +49,32 @@ import (
 //	}
 //}
 
-func ParseFallThroughSwitchStmt(switch_stmt *ast.SwitchStmt) string {
+func ParseFallThroughSwitchStmt(switch_stmt int) string {
 	id := 2
+	id *= 7
+bbb:
 	switch id {
 	case 1:
-		log.Print("id = 1")
+		//log.Print("id = 1")
+		goto bbb
+		a := 2
 		fallthrough
 	case 2:
-		log.Print("id = 2")
+		//log.Print("id = 2")
+		a := 3
+		a += 4
+		if id > 3 {
+			id = 7
+			break
+		}
+	default:
+		id = 6
 	}
 
 	//return []string{""}
+	bb:
 	return ""
+	
 }
 //
 //func ParseNoConditionSwitchStmt(switch_stmt *ast.SwitchStmt) [] string {
