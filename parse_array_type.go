@@ -4,7 +4,7 @@ import "go/ast"
 
 func ParseArrayType(arrayType *ast.ArrayType) string {
 	var ret string
-	tname := ParseExpr(arrayType.Elt)
-	ret = "std::vector<" + tname + ">"
+	tName := ParseExpr(arrayType.Elt)
+	ret = "std::vector<" + tName + ">"
 	return ret
 }

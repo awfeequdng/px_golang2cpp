@@ -4,7 +4,7 @@ import (
 	"go/ast"
 )
 
-func ParseCaseClause(caseClause *ast.CaseClause) []string {
+func ParseCaseClause(caseClause *ast.CaseClause, objectTypeMap *ObjectTypeMap) []string {
 	var ret []string
 	var caseList []string
 	for _, l := range caseClause.List {
@@ -14,7 +14,7 @@ func ParseCaseClause(caseClause *ast.CaseClause) []string {
 	//var bodyCnt = 0
 	body = append(body, "{")
 	for _, b := range caseClause.Body {
-		body = append(body, ParseStmt(&b)...)
+		body = append(body, ParseStmt(&b, objectTypeMap)...)
 		body = append(body, ";")
 		//bodyCnt++
 	}

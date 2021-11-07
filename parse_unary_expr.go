@@ -2,8 +2,8 @@ package main
 
 import "go/ast"
 
-func ParseUnaryExpr(unary_expr *ast.UnaryExpr) string {
-	op := unary_expr.Op.String()
-	val := ParseExpr(unary_expr.X)
+func ParseUnaryExpr(unaryExpr *ast.UnaryExpr) string {
+	op := unaryExpr.Op.String()
+	val := ParseExpr(unaryExpr.X)
 	return "(" + op + val + ")"
 }

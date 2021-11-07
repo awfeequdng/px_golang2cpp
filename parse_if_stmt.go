@@ -2,30 +2,30 @@ package main
 
 import "go/ast"
 
-func ParseIfStmt(if_stmt *ast.IfStmt) []string {
+func ParseIfStmt(ifStmt *ast.IfStmt, objectTypeMap *ObjectTypeMap) []string {
 	var ret []string
 	var initStmt []string
 	var elseStmt []string
 
-	if if_stmt.Init != nil {
+	if ifStmt.Init != nil {
 		ret = append(ret, "{")
 		// add init statment in '{}'
-		initStmt = ParseStmt(&if_stmt.Init)
+		initStmt = ParseStmt(&ifStmt.Init, objectTypeMap)
 	}
-	cond := ParseExpr(if_stmt.Cond)
-	body := ParseBlockStmt(if_stmt.Body)
+	cond := ParseExpr(ifStmt.Cond)
+	body := ParseBlockStmt(ifStmt.Body, objectTypeMap)
 
 	ret = append(ret, initStmt...)
 	ret = append(ret, "if (" + cond + ")")
 	ret = append(ret, body...)
-	if if_stmt.Else != nil {
-		elseStmt = ParseStmt(&if_stmt.Else)
+	if ifStmt.Else != nil {
+		elseStmt = ParseStmt(&ifStmt.Else, objectTypeMap)
 		ret = append(ret, "else " )
 		ret = append(ret, elseStmt...)
 	}
 
 
-	if if_stmt.Init != nil {
+	if ifStmt.Init != nil {
 		ret = append(ret, "}")
 	}
 	return ret

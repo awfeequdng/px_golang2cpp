@@ -10,10 +10,10 @@ import (
 
 // parsed var type
 const (
-	VAR_ARRAY_TYPE = iota
-	VAR_MAP_TYPE
-	VAR_NORMAL_TYPE
-	VAR_NONE_TYPE
+	VarArrayType = iota
+	VarMapType
+	VarNormalType
+	VarNoneType
 )
 
 // func ParseArrayType(Type *ast.ArrayType, Elts []ast.Expr) (tname string, values []string) {
@@ -47,17 +47,17 @@ type type_value struct {
 func genTypeValues(name string, tvalue type_value) string {
 	var ret string
 	switch tvalue.var_type {
-	case VAR_ARRAY_TYPE:
+	case VarArrayType:
 		ret = tvalue.tname + " " + name + strings.Join(tvalue.values, "\n") + ";"
 
-	case VAR_MAP_TYPE:
+	case VarMapType:
 		ret = tvalue.tname + " " + name + strings.Join(tvalue.values, "\n") + ";"
 
-	case VAR_NORMAL_TYPE:
+	case VarNormalType:
 		// normal is not append with '{}', so use '=' instead
 		ret = tvalue.tname + " " + name + " = " + strings.Join(tvalue.values, "\n") + ";"
 
-	case VAR_NONE_TYPE:
+	case VarNoneType:
 		_, file, line, _ := runtime.Caller(0)
 		log.Fatal("INVALID VAR TYPE" + file + ", lien: " + strconv.Itoa(line))
 	}
@@ -65,7 +65,7 @@ func genTypeValues(name string, tvalue type_value) string {
 	return ret
 }
 
-func ParseVar(decl *ast.GenDecl) []string {
+func ParseGenDeclVar(decl *ast.GenDecl, objectTypeMap *ObjectTypeMap) []string {
 	var ret []string
 	for _, spec := range decl.Specs {
 		if vs, ok := spec.(*ast.ValueSpec); ok {
@@ -80,7 +80,7 @@ func ParseVar(decl *ast.GenDecl) []string {
 					tv := type_value{typ, tname, vals}
 					tvalues = append(tvalues, tv)
 				} else if _, ok := value.(*ast.CallExpr); ok {
-					typ := VAR_NORMAL_TYPE
+					typ := VarNormalType
 					var tname string
 					if vs.Type == nil {
 						tname = "auto"
@@ -92,7 +92,7 @@ func ParseVar(decl *ast.GenDecl) []string {
 					tv := type_value{typ, tname, vals}
 					tvalues = append(tvalues, tv)
 				} else {
-					typ := VAR_NORMAL_TYPE
+					typ := VarNormalType
 					tname := "auto "
 					var vals []string
 					vals = append(vals, ParseExpr(value))
@@ -105,7 +105,7 @@ func ParseVar(decl *ast.GenDecl) []string {
 				for i, name := range names {
 					ret = append(ret, genTypeValues(name, tvalues[i]))
 				}
-			} else if (len(names) == 1 && len(tvalues) > 0) {
+			} else if len(names) == 1 && len(tvalues) > 0 {
 				log.Fatal("NOT IMPLEMENTED YET")
 			} else if len(tvalues) == 0 {
 				// have name and type
@@ -113,7 +113,7 @@ func ParseVar(decl *ast.GenDecl) []string {
 					log.Fatal("can not be nil when values is nil")
 				}
 				tname := ParseExpr(vs.Type)
-				typ := VAR_MAP_TYPE
+				typ := VarMapType
 				vals := []string{"{}"}
 				tv := type_value{typ, tname, vals}
 				tvalues = append(tvalues, tv)

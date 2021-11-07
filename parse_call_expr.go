@@ -5,23 +5,23 @@ import (
 	"log"
 )
 
-func ParseCallExpr(call_expr *ast.CallExpr) string {
+func ParseCallExpr(callExpr *ast.CallExpr) string {
 	var ret string
 
-	fn := call_expr.Fun
-	fn_name := ParseExpr(fn)
-	args := call_expr.Args
-	ret += fn_name + "("
+	fn := callExpr.Fun
+	fnName := ParseExpr(fn)
+	args := callExpr.Args
+	ret += fnName + "("
 	for id, arg := range args {
-		arg_name := ParseExpr(arg)
+		argName := ParseExpr(arg)
 		if id == 0 {
-			ret += arg_name
+			ret += argName
 		} else {
-			ret += "," + arg_name
+			ret += "," + argName
 		}
 	}
 	ret += ")"
-	if fn_name == "make" {
+	if fnName == "make" {
 		// cpp do not use make to initial object, so return {}
 		log.Print("call fun is: " + ret + ", but we return {}")
 		return "{}"

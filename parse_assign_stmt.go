@@ -6,11 +6,11 @@ import (
 	"log"
 )
 
-func ParseAssignStmt(assign_stmt *ast.AssignStmt) []string {
+func ParseAssignStmt(assignStmt *ast.AssignStmt, objectTypeMap *ObjectTypeMap) []string {
 	var ret []string
 	var names []string
 	var values []string
-	switch assign_stmt.Tok {
+	switch assignStmt.Tok {
 		case token.DEFINE:
 		case token.ASSIGN:
 		case token.ADD_ASSIGN:
@@ -21,17 +21,17 @@ func ParseAssignStmt(assign_stmt *ast.AssignStmt) []string {
 		case token.AND_ASSIGN:
 		case token.OR_ASSIGN:
 		default:
-			log.Fatal("do not support, token = " + assign_stmt.Tok.String())
+			log.Fatal("do not support, token = " + assignStmt.Tok.String())
 	}
 
-	for _, lhs := range assign_stmt.Lhs {
+	for _, lhs := range assignStmt.Lhs {
 		names = append(names, ParseExpr(lhs))
 	}
-	for _, rhs := range assign_stmt.Rhs {
+	for _, rhs := range assignStmt.Rhs {
 		values = append(values, ParseExpr(rhs))
 	}
-	name_size := len(names)
-	value_size := len(values)
+	nameSize := len(names)
+	valueSize := len(values)
 	// if name_size != value_size {
 	// 	log.Fatalf("name size: %d not equal value size: %d", name_size, value_size)
 	// }
@@ -39,17 +39,17 @@ func ParseAssignStmt(assign_stmt *ast.AssignStmt) []string {
 	var name string
 	var value string
 
-	if name_size == 0 {
+	if nameSize == 0 {
 		log.Fatal("name size is 0")
 	}
-	if value_size == 0 {
+	if valueSize == 0 {
 		log.Fatal("value size if 0")
 	}
 
-	if name_size == 1 {
+	if nameSize == 1 {
 		name = names[0]
 		value = values[0]
-		switch assign_stmt.Tok {
+		switch assignStmt.Tok {
 		case token.DEFINE:
 			ret = append(ret, "auto " + name + " = " + value + ";")
 		case token.ASSIGN:
@@ -67,11 +67,11 @@ func ParseAssignStmt(assign_stmt *ast.AssignStmt) []string {
 		case token.AND_ASSIGN:
 			fallthrough
 		case token.OR_ASSIGN:
-			ret = append(ret, name + assign_stmt.Tok.String() + value + ";")
+			ret = append(ret, name + assignStmt.Tok.String() + value + ";")
 		default:
-			log.Fatal("not support assign operation, token = " + assign_stmt.Tok.String())
+			log.Fatal("not support assign operation, token = " + assignStmt.Tok.String())
 		}
-	} else if assign_stmt.Tok == token.DEFINE || assign_stmt.Tok == token.ASSIGN {
+	} else if assignStmt.Tok == token.DEFINE || assignStmt.Tok == token.ASSIGN {
 		for id, n := range names {
 			if id == 0 {
 				name += n
@@ -86,17 +86,17 @@ func ParseAssignStmt(assign_stmt *ast.AssignStmt) []string {
 				value += ", " + v
 			}
 		}
-		switch assign_stmt.Tok {
+		switch assignStmt.Tok {
 		case token.DEFINE:
 			ret = append(ret, "auto [" + name + "] = " + value + ";")
 		case token.ASSIGN:
 			includeFileMap["std::tie"] = "tuple"
 			ret = append(ret, "std::tie(" + name + ") = {" + value + "};")
 		default:
-			log.Fatal("NOT SUPPORT MULTI VALUE ASSIGN, token = " + assign_stmt.Tok.String())
+			log.Fatal("NOT SUPPORT MULTI VALUE ASSIGN, token = " + assignStmt.Tok.String())
 		}
 	} else {
-		log.Fatal("NOT SUPPORT MULTI VALUE ASSIGN, token = " + assign_stmt.Tok.String())
+		log.Fatal("NOT SUPPORT MULTI VALUE ASSIGN, token = " + assignStmt.Tok.String())
 	}
 
 	return ret

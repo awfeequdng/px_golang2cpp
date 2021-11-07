@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"go/ast"
 	"go/parser"
@@ -69,6 +70,11 @@ func main() {
 
 func parseGolang(f *ast.File) []string {
 	var ret []string
+
+	var objectTypeMap ObjectTypeMap
+	objectTypeMap.typeMap = make(map[string]string)
+	objectTypeMap.next = nil
+
 	ret = append(ret, "#include <unordered_map>")
 	ret = append(ret, "#include <string>")
 	ret = append(ret, "#include <vector>")
@@ -77,10 +83,10 @@ func parseGolang(f *ast.File) []string {
 
 	for _, decl := range f.Decls {
 		if g, ok := decl.(*ast.GenDecl); ok {
-			ret = append(ret, ParseGenDecl(g)...)
+			ret = append(ret, ParseGenDecl(g, &objectTypeMap)...)
 		}
 		if g, ok := decl.(*ast.FuncDecl); ok {
-			ret = append(ret, ParseFuncDecl(g)...)
+			ret = append(ret, ParseFuncDecl(g, &objectTypeMap)...)
 		}
 	}
 	ret = append(ret, "int main() {")
@@ -105,10 +111,10 @@ func golang2cpp(file, source string) string {
 		log.Fatal(err)
 	}
 
-	// ast.Print(prog.fset, pkg)
-	//buf := new(bytes.Buffer)
-	//ast.Fprint(buf, prog.fset, f, ast.NotNilFilter)
-	//println(buf.String())
+	//ast.Print(prog.fset, pkg)
+	buf := new(bytes.Buffer)
+	ast.Fprint(buf, prog.fset, f, ast.NotNilFilter)
+	println(buf.String())
 
 	ret := parseGolang(f)
     return strings.Join(ret, "\n")

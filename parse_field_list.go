@@ -8,16 +8,16 @@ var typeMap = map[string]string {
 	"int": "int64_t",
 }
 
-func ParseFieldList(field_list *ast.FieldList) []string {
+func ParseFieldList(fieldList *ast.FieldList) []string {
 	var ret []string
 	// var id = 0;
-	for _, field := range field_list.List {
+	for _, field := range fieldList.List {
 		typ := ParseExpr(field.Type)
 		// convert go type to c++ type
 		if val, ok := typeMap[typ]; ok {
 			typ = val
 		}
-		if (field.Names != nil) {
+		if field.Names != nil {
 			for _, name := range field.Names {
 				ret = append(ret, typ + " " + name.Name)
 				// if id == 0 {

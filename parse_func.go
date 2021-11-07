@@ -7,14 +7,14 @@ import (
 
 var globalObjectMap map[string]string
 
-func ParseFuncDecl(decl *ast.FuncDecl) []string {
+func ParseFuncDecl(decl *ast.FuncDecl, objectTypeMap *ObjectTypeMap) []string {
 	var ret []string
 	name := decl.Name.Name
-	func_type := decl.Type
-	params := ParseFieldList(func_type.Params)
+	funcType := decl.Type
+	params := ParseFieldList(funcType.Params)
 	var results []string
-	if func_type.Results != nil {
-		results = ParseFieldList(func_type.Results)
+	if funcType.Results != nil {
+		results = ParseFieldList(funcType.Results)
 	}
 	signature := name + "(" + strings.Join(params, ",") + ")"
 	if len(results) == 0 {
@@ -37,7 +37,7 @@ func ParseFuncDecl(decl *ast.FuncDecl) []string {
 		tuple += ">" + signature
 		ret = append(ret, tuple)
 	}
-	body := ParseBlockStmt(decl.Body)
+	body := ParseBlockStmt(decl.Body, objectTypeMap)
 	ret = append(ret, body...)
 
 	return ret

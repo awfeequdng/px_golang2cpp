@@ -6,7 +6,7 @@ import (
 )
 
 // ParseNoConditionCaseClause use 'if' instead of 'case'
-func ParseNoConditionCaseClause(caseClause *ast.CaseClause) []string {
+func ParseNoConditionCaseClause(caseClause *ast.CaseClause, objectTypeMap *ObjectTypeMap) []string {
 	var ret []string
 	var caseList []string
 	for _, l := range caseClause.List {
@@ -16,7 +16,7 @@ func ParseNoConditionCaseClause(caseClause *ast.CaseClause) []string {
 	var bodyCnt = 0
 	body = append(body, "{")
 	for _, b := range caseClause.Body {
-		body = append(body, ParseStmt(&b)...)
+		body = append(body, ParseStmt(&b, objectTypeMap)...)
 		body = append(body, ";")
 		bodyCnt++
 	}
@@ -40,18 +40,18 @@ func ParseNoConditionCaseClause(caseClause *ast.CaseClause) []string {
 	return ret
 }
 
-func ParseNoConditionSwitchStmt(switchStmt *ast.SwitchStmt) [] string {
+func ParseNoConditionSwitchStmt(switchStmt *ast.SwitchStmt, objectTypeMap *ObjectTypeMap) [] string {
 	var ret []string
 	if switchStmt.Init != nil {
 		ret = append(ret, "{")
-		ret = append(ret, ParseStmt(&switchStmt.Init)...)
+		ret = append(ret, ParseStmt(&switchStmt.Init, objectTypeMap)...)
 	}
 
 	bodyCnt := len(switchStmt.Body.List)
 	for id, l := range switchStmt.Body.List {
 		var body []string
 		if clause, ok := l.(*ast.CaseClause); ok {
-			body = append(body, ParseNoConditionCaseClause(clause)...)
+			body = append(body, ParseNoConditionCaseClause(clause, objectTypeMap)...)
 		} else {
 			log.Fatal("invalid case clause")
 		}
@@ -67,22 +67,22 @@ func ParseNoConditionSwitchStmt(switchStmt *ast.SwitchStmt) [] string {
 	return ret
 }
 
-func ParseSwitchStmt(switch_stmt *ast.SwitchStmt) []string {
+func ParseSwitchStmt(switchStmt *ast.SwitchStmt, objectTypeMap *ObjectTypeMap) []string {
 	var ret []string
 	var tag string
-	if switch_stmt.Tag == nil {
-		return ParseNoConditionSwitchStmt(switch_stmt)
+	if switchStmt.Tag == nil {
+		return ParseNoConditionSwitchStmt(switchStmt, objectTypeMap)
 	}
-	tag = ParseExpr(switch_stmt.Tag)
-	body := ParseBlockStmt(switch_stmt.Body)
-	if switch_stmt.Init != nil {
+	tag = ParseExpr(switchStmt.Tag)
+	body := ParseBlockStmt(switchStmt.Body, objectTypeMap)
+	if switchStmt.Init != nil {
 		ret = append(ret, "{")
-		ret = append(ret, ParseStmt(&switch_stmt.Init)...)
+		ret = append(ret, ParseStmt(&switchStmt.Init, objectTypeMap)...)
 	}
 	ret = append(ret, "switch(" + tag + ")")
 	ret = append(ret, body...)
 
-	if switch_stmt.Init != nil {
+	if switchStmt.Init != nil {
 		ret = append(ret, "}")
 	}
 

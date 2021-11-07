@@ -6,7 +6,7 @@ import (
 	"log"
 )
 
-func ParseConst(decl *ast.GenDecl) []string {
+func ParseGenDeclConst(decl *ast.GenDecl, objectTypeMap *ObjectTypeMap) []string {
 	var ret []string
 	for _, spec := range decl.Specs {
 		if vs, ok := spec.(*ast.ValueSpec); ok {

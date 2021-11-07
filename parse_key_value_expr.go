@@ -4,10 +4,9 @@ import (
 	"go/ast"
 )
 
-// return: type and values
-func ParseKeyValueExpr(key_value_expr *ast.KeyValueExpr) string {
-	key := key_value_expr.Key
-	val := key_value_expr.Value
+func ParseKeyValueExpr(keyValueExpr *ast.KeyValueExpr) string {
+	key := keyValueExpr.Key
+	val := keyValueExpr.Value
 	var ret string
 	ret += "{"
 	ret += ParseExpr(key) + " , "

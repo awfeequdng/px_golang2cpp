@@ -8,7 +8,7 @@ import (
 // return: type and values
 func ParseCompositeLit(compLit *ast.CompositeLit) (typ int, tname string, vals []string) {
 	if mapType, ok := compLit.Type.(*ast.MapType); ok {
-		typ = VAR_MAP_TYPE
+		typ = VarMapType
 		tname = ParseMapType(mapType)
 		vals = append(vals, "{")
 		for _, elt := range compLit.Elts {
@@ -16,7 +16,7 @@ func ParseCompositeLit(compLit *ast.CompositeLit) (typ int, tname string, vals [
 		}
 		vals = append(vals, "}")
 	} else if arrayType, ok := compLit.Type.(*ast.ArrayType); ok {
-		typ = VAR_ARRAY_TYPE
+		typ = VarArrayType
 		tname = ParseArrayType(arrayType)
 		vals = append(vals, "{")
 		for _, elt := range compLit.Elts {

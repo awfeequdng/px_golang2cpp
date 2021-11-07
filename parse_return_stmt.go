@@ -2,14 +2,14 @@ package main
 
 import "go/ast"
 
-func ParseReturnStmt(return_stmt *ast.ReturnStmt) []string {
+func ParseReturnStmt(returnStmt *ast.ReturnStmt) []string {
 	var exprs []string
 
-	if return_stmt.Results == nil {
+	if returnStmt.Results == nil {
 		return []string{"return;"}
 	}
 
-	for _, res := range return_stmt.Results {
+	for _, res := range returnStmt.Results {
 		exprs = append(exprs, ParseExpr(res))
 	}
 

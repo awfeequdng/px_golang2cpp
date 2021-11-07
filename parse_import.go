@@ -33,7 +33,7 @@ func PrintImportMap() {
 	}
 }
 
-func ParseImport(decl *ast.GenDecl) []string {
+func ParseGenDeclImport(decl *ast.GenDecl) []string {
 	var ret []string
 	var names []string
 	for _, spec := range decl.Specs {

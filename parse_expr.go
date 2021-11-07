@@ -82,6 +82,8 @@ func ParseExpr(expr ast.Expr) string {
 	// Walk(v, n.Key)
 	// Walk(v, n.Value)
 
+	case *ast.StructType:
+		return ParseStructType(expr.(*ast.StructType))
 	case *ast.ArrayType:
 		return ParseArrayType(expr.(*ast.ArrayType))
 	case *ast.MapType:
