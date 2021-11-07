@@ -26,16 +26,11 @@ func ParseExpr(expr ast.Expr) string {
 	// Walk(v, n.Body)
 
 	case *ast.CompositeLit:
-		log.Fatal("can not call composite lit here")
-		// return ParseCompositeLit()
-	// if n.Type != nil {
-	// 	Walk(v, n.Type)
-	// }
-	// walkExprList(v, n.Elts)
-
+		return ParseCompositeLite(expr.(*ast.CompositeLit))
+		//log.Fatal("can not call composite lit here")
 	case *ast.ParenExpr:
-		paren_expr := expr.(*ast.ParenExpr)
-		return "(" + ParseExpr(paren_expr.X) + ")"
+		parenExpr := expr.(*ast.ParenExpr)
+		return "(" + ParseExpr(parenExpr.X) + ")"
 	case *ast.SelectorExpr:
 		return ParseSelectorExpr(expr.(*ast.SelectorExpr))
 

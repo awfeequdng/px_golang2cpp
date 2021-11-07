@@ -4,6 +4,7 @@ import (
 	"go/ast"
 	"go/token"
 	"log"
+	"strconv"
 )
 
 func ParseAssignStmt(assignStmt *ast.AssignStmt, objectTypeMap *ObjectTypeMap) []string {
@@ -32,9 +33,6 @@ func ParseAssignStmt(assignStmt *ast.AssignStmt, objectTypeMap *ObjectTypeMap) [
 	}
 	nameSize := len(names)
 	valueSize := len(values)
-	// if name_size != value_size {
-	// 	log.Fatalf("name size: %d not equal value size: %d", name_size, value_size)
-	// }
 
 	var name string
 	var value string
@@ -52,26 +50,11 @@ func ParseAssignStmt(assignStmt *ast.AssignStmt, objectTypeMap *ObjectTypeMap) [
 		switch assignStmt.Tok {
 		case token.DEFINE:
 			ret = append(ret, "auto " + name + " = " + value + ";")
-		case token.ASSIGN:
-			fallthrough
-		case token.ADD_ASSIGN:
-			fallthrough
-		case token.SUB_ASSIGN:
-			fallthrough
-		case token.MUL_ASSIGN:
-			fallthrough
-		case token.QUO_ASSIGN:
-			fallthrough
-		case token.REM_ASSIGN:
-			fallthrough
-		case token.AND_ASSIGN:
-			fallthrough
-		case token.OR_ASSIGN:
-			ret = append(ret, name + assignStmt.Tok.String() + value + ";")
 		default:
-			log.Fatal("not support assign operation, token = " + assignStmt.Tok.String())
+			ret = append(ret, name + assignStmt.Tok.String() + value + ";")
 		}
-	} else if assignStmt.Tok == token.DEFINE || assignStmt.Tok == token.ASSIGN {
+	} else if valueSize == 1 {
+		// names size > 1 and value size = 1
 		for id, n := range names {
 			if id == 0 {
 				name += n
@@ -79,13 +62,7 @@ func ParseAssignStmt(assignStmt *ast.AssignStmt, objectTypeMap *ObjectTypeMap) [
 				name += ", " + n
 			}
 		}
-		for id, v := range values {
-			if id == 0 {
-				value += v
-			} else {
-				value += ", " + v
-			}
-		}
+		value = values[0]
 		switch assignStmt.Tok {
 		case token.DEFINE:
 			ret = append(ret, "auto [" + name + "] = " + value + ";")
@@ -95,8 +72,23 @@ func ParseAssignStmt(assignStmt *ast.AssignStmt, objectTypeMap *ObjectTypeMap) [
 		default:
 			log.Fatal("NOT SUPPORT MULTI VALUE ASSIGN, token = " + assignStmt.Tok.String())
 		}
+	} else if nameSize == valueSize {
+		var nameType string
+		switch assignStmt.Tok {
+		case token.DEFINE:
+			nameType = "auto "
+		case token.ASSIGN:
+			nameType = ""
+		default:
+			log.Fatal("NOT SUPPORT MULTI VALUE ASSIGN, token = " + assignStmt.Tok.String())
+		}
+		for idx, n := range names {
+			name = n
+			value = values[idx]
+			ret = append(ret, nameType + name + " = " + value + ";")
+		}
 	} else {
-		log.Fatal("NOT SUPPORT MULTI VALUE ASSIGN, token = " + assignStmt.Tok.String())
+		log.Fatal("nameSize does not equal valueSize, nameSize: " + strconv.Itoa(nameSize) + ", valueSize: " + strconv.Itoa(valueSize))
 	}
 
 	return ret

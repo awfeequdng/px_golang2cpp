@@ -3,28 +3,31 @@ package main
 import (
 	"go/ast"
 	"log"
+	"strings"
 )
 
-// return: type and values
-func ParseCompositeLit(compLit *ast.CompositeLit) (typ int, tname string, vals []string) {
+func ParseCompositeLite(compLit *ast.CompositeLit) string {
+	var ret []string
+	var vals []string
 	if mapType, ok := compLit.Type.(*ast.MapType); ok {
-		typ = VarMapType
-		tname = ParseMapType(mapType)
+		ret = append(ret, ParseMapType(mapType))
 		vals = append(vals, "{")
 		for _, elt := range compLit.Elts {
 			vals = append(vals, ParseExpr(elt) + ",")
 		}
 		vals = append(vals, "}")
+		ret = append(ret, vals...)
 	} else if arrayType, ok := compLit.Type.(*ast.ArrayType); ok {
-		typ = VarArrayType
-		tname = ParseArrayType(arrayType)
+		ret = append(ret, ParseArrayType(arrayType))
 		vals = append(vals, "{")
 		for _, elt := range compLit.Elts {
 			vals = append(vals, ParseExpr(elt) + ",")
 		}
 		vals = append(vals, "}")
+		ret = append(ret, vals...)
 	} else {
 		log.Fatal("not implemented var type")
 	}
-	return typ, tname, vals
+
+	return strings.Join(ret, "\n")
 }
