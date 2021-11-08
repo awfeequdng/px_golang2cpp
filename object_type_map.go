@@ -26,10 +26,10 @@ func getValueType(value string) string {
 		return "map"
 	} else if strings.Contains(value, "vector") {
 		return "array"
-	} else if strings.Contains(value, "\"") {
+	} else if strings.HasPrefix(value, "\"") || strings.HasPrefix(value, "std::string") {
 		return "string"
 	} else {
-		return "int"
+		return "unknown"
 	}
 	//else {
 	//	log.Fatal("invalid value type")
@@ -38,7 +38,7 @@ func getValueType(value string) string {
 }
 
 func (otm* ObjectTypeMap)InsertObjectMap(name string, typeName string, value string) {
-	if strings.Contains(typeName, "auto") {
+	if strings.HasPrefix(typeName, "auto") {
 		typeName = getValueType(value)
 	}
 	otm.typeMap[name] = typeName

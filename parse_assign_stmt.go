@@ -49,20 +49,26 @@ func ParseAssignStmt(assignStmt *ast.AssignStmt, objectTypeMap *ObjectTypeMap) [
 		value = values[0]
 		switch assignStmt.Tok {
 		case token.DEFINE:
+			objectTypeMap.InsertObjectMap("auto", name, value)
 			ret = append(ret, "auto " + name + " = " + value + ";")
 		default:
 			ret = append(ret, name + assignStmt.Tok.String() + value + ";")
 		}
 	} else if valueSize == 1 {
+		value = values[0]
+
 		// names size > 1 and value size = 1
 		for id, n := range names {
+			if assignStmt.Tok == token.DEFINE {
+				objectTypeMap.InsertObjectMap("auto", name, value)
+			}
 			if id == 0 {
 				name += n
 			} else {
 				name += ", " + n
 			}
 		}
-		value = values[0]
+
 		switch assignStmt.Tok {
 		case token.DEFINE:
 			ret = append(ret, "auto [" + name + "] = " + value + ";")

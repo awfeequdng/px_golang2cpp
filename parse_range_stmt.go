@@ -19,6 +19,9 @@ func ParseRangeStmt(stmt *ast.RangeStmt, objectTypeMap *ObjectTypeMap) []string 
 	if err != nil {
 		log.Fatal("can not find object type: " + x)
 	}
+	if strings.HasPrefix(objType, "unknown") {
+		log.Fatal("unknown object type: " + x)
+	}
 	// whether range object is a map
 	var isMap = strings.Contains(objType, "map")
 
