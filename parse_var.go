@@ -30,10 +30,12 @@ func ParseGenDeclVar(decl *ast.GenDecl, objectTypeMap *ObjectTypeMap) []string {
 
 			if len(names) == len(values) {
 				for idx, name := range names {
+					objectTypeMap.InsertObjectMap(name, tname, values[idx])
 					ret = append(ret, tname + " " + name + " = " + values[idx] + ";")
 				}
 			} else if len(names) > 1 && len(values) == 1 {
 				for _, name := range names {
+					objectTypeMap.InsertObjectMap(name, tname, values[0])
 					ret = append(ret, tname + " " + name + " = " + values[0])
 				}
 			} else if len(values) == 0 && len(names) > 0 {
@@ -42,6 +44,7 @@ func ParseGenDeclVar(decl *ast.GenDecl, objectTypeMap *ObjectTypeMap) []string {
 					log.Fatal("can not be nil when values is nil")
 				}
 				for _, name := range names {
+					objectTypeMap.InsertObjectMap(name, tname, "")
 					ret = append(ret, tname + " " + name + ";")
 				}
  			} else {

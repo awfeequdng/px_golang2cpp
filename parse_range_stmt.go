@@ -45,7 +45,7 @@ func ParseRangeStmt(stmt *ast.RangeStmt, objectTypeMap *ObjectTypeMap) []string 
 			ret = append(ret, "for (" + keyValType + " " + val + " : " + x + ") {")
 		} else {
 			ret = append(ret, "for (" + keyValType + " " + key + " = 0; " + key + "< " + x + ".size(); " + key + "++ ) {")
-			ret = append(ret, val + " = " + x + "[" + key + "];")
+			ret = append(ret, keyValType + val + " = " + x + "[" + key + "];")
 		}
 	}
 	if stmt.Body == nil {

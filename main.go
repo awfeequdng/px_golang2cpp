@@ -20,7 +20,7 @@ const version = "golang2cpp 0.1"
 var includeFileMap map[string]string = make(map[string]string)
 
 func main() {
-	inputFilename := "test/switch_stmt_test.go"
+	inputFilename := "test/for_test.go"
 	outputFilename := ""
 	if len(os.Args) > 1 {
 		if os.Args[1] == "--version" {
