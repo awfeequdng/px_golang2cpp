@@ -35,6 +35,7 @@ func ParseExpr(expr ast.Expr) string {
 		return ParseSelectorExpr(expr.(*ast.SelectorExpr))
 
 	case *ast.IndexExpr:
+		return ParseIndexExpr(expr.(*ast.IndexExpr))
 	// Walk(v, n.X)
 	// Walk(v, n.Index)
 
