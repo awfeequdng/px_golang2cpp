@@ -20,7 +20,7 @@ const version = "golang2cpp 0.1"
 var includeFileMap map[string]string = make(map[string]string)
 
 func main() {
-	inputFilename := "test/slice_test.go"
+	inputFilename := ""
 	outputFilename := ""
 	if len(os.Args) > 1 {
 		if os.Args[1] == "--version" {
@@ -48,7 +48,8 @@ func main() {
 	if inputFilename != "" {
 		sourceData, err = ioutil.ReadFile(inputFilename)
 	} else {
-		sourceData, err = ioutil.ReadAll(os.Stdin)
+		log.Fatal("no input file")
+		//sourceData, err = ioutil.ReadAll(os.Stdin)
 	}
 	if err != nil {
 		log.Fatal(err)
