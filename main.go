@@ -20,7 +20,7 @@ const version = "golang2cpp 0.1"
 var includeFileMap map[string]string = make(map[string]string)
 
 func main() {
-	inputFilename := "test/for_test.go"
+	inputFilename := "test/slice_test.go"
 	outputFilename := ""
 	if len(os.Args) > 1 {
 		if os.Args[1] == "--version" {
@@ -99,7 +99,7 @@ func parseGolang(f *ast.File) []string {
 		includes = append(includes, "#include <" + v + ">")
 	}
 	includes = append(includes, ret...)
-
+	objectTypeMap.PrintObjectMap()
 	return includes
 }
 
