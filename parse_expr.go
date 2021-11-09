@@ -53,6 +53,7 @@ func ParseExpr(expr ast.Expr) string {
 	// }
 
 	case *ast.TypeAssertExpr:
+		return ParseTypeAssertExpr(expr.(*ast.TypeAssertExpr))
 	// Walk(v, n.X)
 	// if n.Type != nil {
 		// Walk(v, n.Type)
@@ -86,7 +87,6 @@ func ParseExpr(expr ast.Expr) string {
 	case *ast.MapType:
 		return ParseMapType(expr.(*ast.MapType))
 	}
-
 
 	return ""
 }
