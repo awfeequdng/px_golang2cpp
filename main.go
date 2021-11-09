@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"fmt"
 	"go/ast"
 	"go/parser"
@@ -119,9 +118,9 @@ func golang2cpp(file, source string) string {
 	}
 
 	//ast.Print(prog.fset, pkg)
-	buf := new(bytes.Buffer)
-	ast.Fprint(buf, prog.fset, f, ast.NotNilFilter)
-	println(buf.String())
+	//buf := new(bytes.Buffer)
+	//ast.Fprint(buf, prog.fset, f, ast.NotNilFilter)
+	//println(buf.String())
 
 	ret := parseGolang(f)
     return strings.Join(ret, "\n")
