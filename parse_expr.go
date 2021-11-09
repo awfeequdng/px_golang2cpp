@@ -40,6 +40,7 @@ func ParseExpr(expr ast.Expr) string {
 	// Walk(v, n.Index)
 
 	case *ast.SliceExpr:
+		return ParseSliceExpr(expr.(*ast.SliceExpr))
 	// Walk(v, n.X)
 	// if n.Low != nil {
 	// 	Walk(v, n.Low)
@@ -84,8 +85,6 @@ func ParseExpr(expr ast.Expr) string {
 		return ParseArrayType(expr.(*ast.ArrayType))
 	case *ast.MapType:
 		return ParseMapType(expr.(*ast.MapType))
-	// case *ast.Field:
-	// 	return ParseField(expr.(*ast.Field))
 	}
 
 

@@ -27,7 +27,8 @@ func ParseBranchStmt(stmt *ast.BranchStmt) []string {
 		}
 	case token.CONTINUE:
 		if stmt.Label != nil {
-			log.Fatal("implement CONTINUE error: do not use label in continue")
+			label := stmt.Label.Name
+			ret = append(ret, "continue " + label + ";")
 		} else {
 			ret = append(ret, "continue;")
 		}

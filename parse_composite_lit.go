@@ -21,6 +21,9 @@ func ParseCompositeLite(compLit *ast.CompositeLit) string {
 		ret = append(ret, ParseArrayType(arrayType))
 		vals = append(vals, "{")
 		for _, elt := range compLit.Elts {
+			if _, ok := elt.(* ast.KeyValueExpr); ok {
+				log.Fatal("not support key-value in array type now")
+			}
 			vals = append(vals, ParseExpr(elt) + ",")
 		}
 		vals = append(vals, "}")

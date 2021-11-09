@@ -80,6 +80,7 @@ func parseGolang(f *ast.File) []string {
 	ret = append(ret, "#include <vector>")
 	ret = append(ret, "#include <iostream>")
 	ret = append(ret, "using namespace std;")
+	ret = append(ret, GetSliceTemplate())
 
 	for _, decl := range f.Decls {
 		if g, ok := decl.(*ast.GenDecl); ok {

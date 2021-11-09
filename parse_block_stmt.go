@@ -30,6 +30,7 @@ func ParseStmt(stmt *ast.Stmt, objectTypeMap *ObjectTypeMap) []string {
 			ret = append(ret, ParseExprStmt((*stmt).(*ast.ExprStmt))...)
 		case *ast.SendStmt:
 		case *ast.IncDecStmt:
+			ret = append(ret, ParseIncDecStmt((*stmt).(*ast.IncDecStmt))...)
 		case *ast.AssignStmt:
 			ret = append(ret, ParseAssignStmt((*stmt).(*ast.AssignStmt), objectTypeMap)...)
 		case *ast.GoStmt:
