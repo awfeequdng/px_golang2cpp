@@ -19,9 +19,16 @@ func StrBetween(str, left, right string) string {
 }
 
 func FindObjectMap(objectTypeMap *ObjectTypeMap, objName string) (typeName string,err error) {
+	// objName may be a function name or a temporary value
 	if v, ok := objectTypeMap.typeMap[objName]; ok {
 		return v, nil
 	}
+	if strings.HasPrefix(objName, "std::vector") {
+		return "std::vector", nil
+	} else if strings.HasPrefix(objName, "std::map") {
+		return "std::map", nil
+	}
+
 	if objectTypeMap.next != nil {
 		return FindObjectMap(objectTypeMap.next, objName)
 	}
