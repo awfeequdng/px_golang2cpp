@@ -35,6 +35,7 @@ func ParseStmt(stmt *ast.Stmt, objectTypeMap *ObjectTypeMap) []string {
 			ret = append(ret, ParseAssignStmt((*stmt).(*ast.AssignStmt), objectTypeMap)...)
 		case *ast.GoStmt:
 		case *ast.DeferStmt:
+			ret = append(ret, ParseDeferStmt((*stmt).(*ast.DeferStmt), objectTypeMap)...)
 		case *ast.ReturnStmt:
 			ret = append(ret, ParseReturnStmt((*stmt).(*ast.ReturnStmt))...)
 		case *ast.BranchStmt:
@@ -48,8 +49,10 @@ func ParseStmt(stmt *ast.Stmt, objectTypeMap *ObjectTypeMap) []string {
 		case *ast.SwitchStmt:
 			ret = append(ret, ParseSwitchStmt((*stmt).(*ast.SwitchStmt), objectTypeMap)...)
 		case *ast.TypeSwitchStmt:
+			ret = append(ret, ParseTypeSwitchStmt((*stmt).(*ast.TypeSwitchStmt), objectTypeMap)...)
 		case *ast.CommClause:
 		case *ast.SelectStmt:
+			ret = append(ret, ParseSelectStmt((*stmt).(*ast.SelectStmt), objectTypeMap)...)
 		case *ast.ForStmt:
 			ret = append(ret, ParseForStmt((*stmt).(*ast.ForStmt), objectTypeMap)...)
 		case *ast.RangeStmt:
