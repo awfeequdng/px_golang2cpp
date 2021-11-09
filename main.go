@@ -94,10 +94,10 @@ func parseGolang(f *ast.File) []string {
 
 	// get struct type's declaration and definition
 	ret = append(ret, GetStructDeclAndDefinition()...)
-
-	ret = append(ret, "int main() {")
-	ret = append(ret, "\tstd::cout << \"hello world\" << std::endl;")
-	ret = append(ret, "}\n")
+	//
+	//ret = append(ret, "int main() {")
+	//ret = append(ret, "\tstd::cout << \"hello world\" << std::endl;")
+	//ret = append(ret, "}\n")
 
 	var includes []string
 	for _, v := range includeFileMap {
@@ -108,8 +108,13 @@ func parseGolang(f *ast.File) []string {
 	return includes
 }
 
+var prog *Program
+func GetProgram() *Program {
+	return prog
+}
+
 func golang2cpp(file, source string) string {
-	prog := NewProgram(map[string]string {
+	prog = NewProgram(map[string]string {
 		file: source,
 	})
 	_, f, err := prog.LoadPackage(file)
