@@ -91,6 +91,10 @@ func parseGolang(f *ast.File) []string {
 			ret = append(ret, ParseFuncDecl(g, &objectTypeMap)...)
 		}
 	}
+
+	// get struct type's declaration and definition
+	ret = append(ret, GetStructDeclAndDefinition()...)
+
 	ret = append(ret, "int main() {")
 	ret = append(ret, "\tstd::cout << \"hello world\" << std::endl;")
 	ret = append(ret, "}\n")
