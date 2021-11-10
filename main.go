@@ -10,7 +10,6 @@ import (
 	"log"
 	"os"
 	"strings"
-
 	//	"strings"
 )
 
@@ -19,7 +18,7 @@ const version = "golang2cpp 0.1"
 var includeFileMap map[string]string = make(map[string]string)
 
 func main() {
-	inputFilename := "test/interface_test.go"
+	inputFilename := "test/func_test.go"
 	outputFilename := ""
 	if len(os.Args) > 1 {
 		if os.Args[1] == "--version" {

@@ -19,9 +19,21 @@ func ParseFuncRev(list *ast.FieldList) (rec, obj string) {
 	if starExpr, ok := list.List[0].Type.(*ast.StarExpr); ok {
 		rec = ParseExpr(starExpr.X)
 	} else {
-		log.Fatal("rev's type is not StartExpr")
+		// log.Fatal("rev's type is not StartExpr")
+		log.Print("rev's type is not StartExpr")
+		rec = ParseExpr(list.List[0].Type)
 	}
 	return rec, obj
+}
+
+func ParseObjectTypeMapFromParams(objectTypeMap *ObjectTypeMap, params []string) {
+	for _, param := range params {
+		res := strings.Split(strings.TrimSpace(param), " ")
+		if len(res) != 2 {
+			log.Fatal("not key-value pair in param: " + param)
+		}
+		objectTypeMap.typeMap[res[1]] = res[0]
+	}
 }
 
 func ParseFuncSignature(decl *ast.FuncDecl, objectTypeMap *ObjectTypeMap) (funcRet, funcName, funcParams, funcVars, retValues string) {
@@ -29,11 +41,12 @@ func ParseFuncSignature(decl *ast.FuncDecl, objectTypeMap *ObjectTypeMap) (funcR
 	funcType := decl.Type
 
 	params := ParseFieldList(funcType.Params)
+	ParseObjectTypeMapFromParams(objectTypeMap, params)
+
 	var results []string
 	if funcType.Results != nil {
 		results = ParseFieldList(funcType.Results)
 	}
-	//vars := results
 
 	funcParams = "(" + strings.Join(params, ",") + ")"
 	funcName = name

@@ -4,6 +4,7 @@ import (
 	"go/ast"
 	"go/token"
 	"log"
+	"strings"
 )
 
 func ParseGenDeclConst(decl *ast.GenDecl, objectTypeMap *ObjectTypeMap) []string {
@@ -42,7 +43,10 @@ func ParseGenDeclConst(decl *ast.GenDecl, objectTypeMap *ObjectTypeMap) []string
 						ret = append(ret, "#define " + name + " " + values[0])
 					}
 				} else {
-					log.Fatal("invalid names size and values size")
+					log.Print("invalid names size and values size")
+					log.Print("names: " + strings.Join(names, " "))
+					log.Print("values: " + strings.Join(values, " "))
+					// log.Fatal("invalid sizes")
 				}
 			} else {
 				for i, name := range names {
