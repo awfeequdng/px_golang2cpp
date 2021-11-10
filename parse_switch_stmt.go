@@ -17,7 +17,6 @@ func ParseNoConditionCaseClause(caseClause *ast.CaseClause, objectTypeMap *Objec
 	body = append(body, "{")
 	for _, b := range caseClause.Body {
 		body = append(body, ParseStmt(&b, objectTypeMap)...)
-		body = append(body, ";")
 		bodyCnt++
 	}
 	body = append(body, "}")

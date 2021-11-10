@@ -74,7 +74,7 @@ func ParseAssignStmt(assignStmt *ast.AssignStmt, objectTypeMap *ObjectTypeMap) [
 			ret = append(ret, "auto [" + name + "] = " + value + ";")
 		case token.ASSIGN:
 			includeFileMap["std::tie"] = "tuple"
-			ret = append(ret, "std::tie(" + name + ") = {" + value + "};")
+			ret = append(ret, "std::tie(" + name + ") = " + value + ";")
 		default:
 			log.Fatal("NOT SUPPORT MULTI VALUE ASSIGN, token = " + assignStmt.Tok.String())
 		}
@@ -82,7 +82,7 @@ func ParseAssignStmt(assignStmt *ast.AssignStmt, objectTypeMap *ObjectTypeMap) [
 		var nameType string
 		switch assignStmt.Tok {
 		case token.DEFINE:
-			nameType = "auto "
+			nameType = "auto"
 		case token.ASSIGN:
 			nameType = ""
 		default:
@@ -91,7 +91,7 @@ func ParseAssignStmt(assignStmt *ast.AssignStmt, objectTypeMap *ObjectTypeMap) [
 		for idx, n := range names {
 			name = n
 			value = values[idx]
-			ret = append(ret, nameType + name + " = " + value + ";")
+			ret = append(ret, nameType + " " + name + " = " + value + ";")
 		}
 	} else {
 		log.Fatal("nameSize does not equal valueSize, nameSize: " + strconv.Itoa(nameSize) + ", valueSize: " + strconv.Itoa(valueSize))

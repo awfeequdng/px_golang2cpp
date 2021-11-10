@@ -7,8 +7,8 @@ func ParseBinaryExpr(binaryExpr *ast.BinaryExpr) string {
 	x := binaryExpr.X
 	op := binaryExpr.Op
 	y := binaryExpr.Y
-	ret += "(" + ParseExpr(x)
+	ret += ParseExpr(x)
 	ret += op.String()
-	ret += ParseExpr(y) + ")"
+	ret += ParseExpr(y)
 	return ret
 }
