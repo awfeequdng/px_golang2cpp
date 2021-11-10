@@ -24,46 +24,106 @@ func ParseFuncRev(list *ast.FieldList) (rec, obj string) {
 	return rec, obj
 }
 
-func ParseFuncSignature(decl *ast.FuncDecl, objectTypeMap *ObjectTypeMap) (FuncRet, FuncName, FuncParams string) {
+func ParseFuncSignature(decl *ast.FuncDecl, objectTypeMap *ObjectTypeMap) (funcRet, funcName, funcParams, funcVars string) {
 	name := decl.Name.Name
 	funcType := decl.Type
+
 	params := ParseFieldList(funcType.Params)
 	var results []string
 	if funcType.Results != nil {
 		results = ParseFieldList(funcType.Results)
 	}
-	FuncParams = "(" + strings.Join(params, ",") + ")"
-	FuncName = name
+	//vars := results
+
+	funcParams = "(" + strings.Join(params, ",") + ")"
+	funcName = name
 	if len(results) == 0 {
-		FuncRet = "void"
+		funcRet = "void"
 	} else if len(results) == 1 {
-		FuncRet = results[0]
+		res := strings.TrimSpace(results[0])
+		if strings.Contains(res, " ") {
+			reses := strings.Split(res, " ")
+			if len(reses) != 2 {
+				log.Fatal("not key-value pair: " + strings.Join(reses, " "))
+			}
+			funcRet = reses[0]
+			funcVars = results[0] + ";"
+		} else {
+			funcRet = results[0]
+		}
+		funcRet = results[0]
 	} else if len(results) == 2 {
 		includeFileMap["std::pair"] = "utility"
-		FuncRet = "std::pair<" + results[0] + "," + results[1] + ">"
+		//funcRet = "std::pair<" + results[0] + "," + results[1] + ">"
+		res1 := strings.TrimSpace(results[0])
+		res2 := strings.TrimSpace(results[1])
+		if strings.Contains(res1, " ") && strings.Contains(res2, " ") {
+			res1s := strings.Split(res1, " ")
+			res2s := strings.Split(res2, " ")
+			if len(res1s) != 2 || len(res2s) != 2 {
+				log.Fatal("not key value pair: " + strings.Join(res1s, " ") + ", " + strings.Join(res2s, " "))
+			}
+			funcRet = "std::pair<" + res1s[0] + "," + res2s[0] + ">"
+			funcVars = results[0] + ";"
+			funcVars += results[1] + ";"
+		} else if !strings.Contains(res1, " ") && !strings.Contains(res2, " ") {
+			funcRet = "std::pair<" + results[0] + "," + results[1] + ">"
+		} else {
+			log.Fatal("not all key-value pair: " + results[0] + ", " + results[1])
+		}
 	} else {
 		includeFileMap["std::tuple"] = "tuple"
-		tuple := "std::tuple<"
-		for id, r := range results {
-			if id == 0 {
-				tuple += r
-			} else {
-				tuple += ", " + r
+		if strings.Contains(strings.TrimSpace(results[0]), " ") {
+			// key-value pair
+			tuple := "std::tuple<"
+			for id, r := range results {
+				res := strings.TrimSpace(r)
+				if !strings.Contains(res, " ") {
+					log.Fatal("not key-value pair: " + r)
+				}
+				reses := strings.Split(res, " ")
+				if len(reses) != 2 {
+					log.Fatal("not key-value pair: " + r)
+				}
+
+				if id == 0 {
+					tuple += reses[0]
+				} else {
+					tuple += ", " + reses[0]
+				}
+				funcVars += reses[1] + ";"
 			}
+			tuple += ">"
+			funcRet = tuple
+		} else {
+			// only type
+			tuple := "std::tuple<"
+			for id, r := range results {
+				if strings.Contains(strings.TrimSpace(r), " ") {
+					log.Fatal("is key-value pair: " + r)
+				}
+				if id == 0 {
+					tuple += r
+				} else {
+					tuple += ", " + r
+				}
+			}
+			tuple += ">"
+			funcRet = tuple
 		}
-		tuple += ">"
-		FuncRet = tuple
 	}
-	return FuncRet, FuncName, FuncParams
+	return funcRet, funcName, funcParams, funcVars
 }
 
 func ParseCommonFuncDecl(decl *ast.FuncDecl, objectTypeMap *ObjectTypeMap) []string {
 	var ret []string
-	funcRet, funcName, funcParams := ParseFuncSignature(decl, objectTypeMap)
-	ret = append(ret, funcRet + funcName + funcParams)
+	funcRet, funcName, funcParams, funcVars := ParseFuncSignature(decl, objectTypeMap)
+	ret = append(ret, funcRet + " " + funcName + funcParams)
 	body := ParseBlockStmt(decl.Body, objectTypeMap)
+	ret = append(ret, "{")
+	ret = append(ret, funcVars)
 	ret = append(ret, body...)
-
+	ret = append(ret, "}")
 	return ret
 }
 
@@ -84,11 +144,13 @@ func ParseMemberFuncDecl(decl *ast.FuncDecl, objectTypeMap *ObjectTypeMap) []str
 	var rev string
 	var revObj string
 	rev, revObj = ParseFuncRev(decl.Recv)
-	funcRet, funcName, funcParams := ParseFuncSignature(decl, objectTypeMap)
+	funcRet, funcName, funcParams, funcVars := ParseFuncSignature(decl, objectTypeMap)
 	// add struct type to function map
 	structFuncDeclMap[rev] = append(structFuncDeclMap[rev], funcRet + " " + funcName + funcParams + ";")
 	body := ParseBlockStmt(decl.Body, objectTypeMap)
+
 	strBody := strings.Join(body, "\n")
+	strBody = "{ " + funcVars + " " + strBody  + " }"
 	strBody = strings.ReplaceAll(strBody, revObj + ".", "this->")
 
 	structFuncDefinitionMap[rev] = append(structFuncDefinitionMap[rev],

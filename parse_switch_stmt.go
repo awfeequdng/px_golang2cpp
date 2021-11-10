@@ -79,9 +79,9 @@ func ParseSwitchStmt(switchStmt *ast.SwitchStmt, objectTypeMap *ObjectTypeMap) [
 		ret = append(ret, "{")
 		ret = append(ret, ParseStmt(&switchStmt.Init, objectTypeMap)...)
 	}
-	ret = append(ret, "switch(" + tag + ")")
+	ret = append(ret, "switch(" + tag + ") {")
 	ret = append(ret, body...)
-
+	ret = append(ret, "}")
 	if switchStmt.Init != nil {
 		ret = append(ret, "}")
 	}

@@ -63,10 +63,10 @@ func ParseStmt(stmt *ast.Stmt, objectTypeMap *ObjectTypeMap) []string {
 
 func ParseBlockStmt(blockStmt *ast.BlockStmt, objectTypeMap *ObjectTypeMap) [] string {
 	var ret []string
-	ret = append(ret, "{")
+	//ret = append(ret, "{")
 	for _, stmt := range blockStmt.List {
 		ret = append(ret, ParseStmt(&stmt, objectTypeMap)...)
 	}
-	ret = append(ret, "}")
+	//ret = append(ret, "}")
 	return ret
 }

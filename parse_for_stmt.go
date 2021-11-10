@@ -21,7 +21,9 @@ func ParseForStmt(stmt *ast.ForStmt, objectTypeMap *ObjectTypeMap) []string {
 	if stmt.Body == nil {
 		ret = append(ret, " {}")
 	} else {
+		ret = append(ret, "{")
 		ret = append(ret, ParseBlockStmt(stmt.Body, objectTypeMap)...)
+		ret = append(ret, "}")
 	}
 
 	if stmt.Init != nil {

@@ -1,6 +1,9 @@
 package main
 
-import "go/ast"
+import (
+	"go/ast"
+	"log"
+)
 
 var typeMap = map[string]string {
 	"float64": "double",
@@ -10,7 +13,7 @@ var typeMap = map[string]string {
 
 func ParseFieldList(fieldList *ast.FieldList) []string {
 	var ret []string
-	// var id = 0;
+	var isTypeNamePair = false
 	for _, field := range fieldList.List {
 		typ := ParseExpr(field.Type)
 		// convert go type to c++ type
@@ -20,14 +23,12 @@ func ParseFieldList(fieldList *ast.FieldList) []string {
 		if field.Names != nil {
 			for _, name := range field.Names {
 				ret = append(ret, typ + " " + name.Name)
-				// if id == 0 {
-				// 	ret = append(ret, typ + " " + name.Name)
-				// } else {
-				// 	ret = append(ret, ", " + typ + " " + name.Name)
-				// }
-				// id++
+				isTypeNamePair = true
 			}
 		} else {
+			if isTypeNamePair {
+				log.Print("exist type-name pair, so can not exit type only")
+			}
 			ret = append(ret, typ)
 		}
 

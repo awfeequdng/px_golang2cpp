@@ -17,13 +17,16 @@ func ParseIfStmt(ifStmt *ast.IfStmt, objectTypeMap *ObjectTypeMap) []string {
 
 	ret = append(ret, initStmt...)
 	ret = append(ret, "if (" + cond + ")")
+	ret = append(ret, "{")
 	ret = append(ret, body...)
+	ret = append(ret, "}")
 	if ifStmt.Else != nil {
 		elseStmt = ParseStmt(&ifStmt.Else, objectTypeMap)
 		ret = append(ret, "else " )
+		ret = append(ret, "{")
 		ret = append(ret, elseStmt...)
+		ret = append(ret, "}")
 	}
-
 
 	if ifStmt.Init != nil {
 		ret = append(ret, "}")
