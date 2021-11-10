@@ -24,7 +24,7 @@ func ParseFuncRev(list *ast.FieldList) (rec, obj string) {
 	return rec, obj
 }
 
-func ParseFuncSignature(decl *ast.FuncDecl, objectTypeMap *ObjectTypeMap) (funcRet, funcName, funcParams, funcVars string) {
+func ParseFuncSignature(decl *ast.FuncDecl, objectTypeMap *ObjectTypeMap) (funcRet, funcName, funcParams, funcVars, retValues string) {
 	name := decl.Name.Name
 	funcType := decl.Type
 
@@ -47,11 +47,11 @@ func ParseFuncSignature(decl *ast.FuncDecl, objectTypeMap *ObjectTypeMap) (funcR
 				log.Fatal("not key-value pair: " + strings.Join(reses, " "))
 			}
 			funcRet = reses[0]
+			retValues = reses[1]
 			funcVars = results[0] + ";"
 		} else {
 			funcRet = results[0]
 		}
-		funcRet = results[0]
 	} else if len(results) == 2 {
 		includeFileMap["std::pair"] = "utility"
 		//funcRet = "std::pair<" + results[0] + "," + results[1] + ">"
@@ -64,6 +64,7 @@ func ParseFuncSignature(decl *ast.FuncDecl, objectTypeMap *ObjectTypeMap) (funcR
 				log.Fatal("not key value pair: " + strings.Join(res1s, " ") + ", " + strings.Join(res2s, " "))
 			}
 			funcRet = "std::pair<" + res1s[0] + "," + res2s[0] + ">"
+			retValues = "{" + res1s[01] + ", " + res2s[1] + "}"
 			funcVars = results[0] + ";"
 			funcVars += results[1] + ";"
 		} else if !strings.Contains(res1, " ") && !strings.Contains(res2, " ") {
@@ -76,6 +77,7 @@ func ParseFuncSignature(decl *ast.FuncDecl, objectTypeMap *ObjectTypeMap) (funcR
 		if strings.Contains(strings.TrimSpace(results[0]), " ") {
 			// key-value pair
 			tuple := "std::tuple<"
+			retValues = "{ "
 			for id, r := range results {
 				res := strings.TrimSpace(r)
 				if !strings.Contains(res, " ") {
@@ -88,12 +90,15 @@ func ParseFuncSignature(decl *ast.FuncDecl, objectTypeMap *ObjectTypeMap) (funcR
 
 				if id == 0 {
 					tuple += reses[0]
+					retValues += reses[1]
 				} else {
 					tuple += ", " + reses[0]
+					retValues += ", " + reses[1]
 				}
-				funcVars += reses[1] + ";"
+				funcVars += r + ";"
 			}
 			tuple += ">"
+			retValues += "}"
 			funcRet = tuple
 		} else {
 			// only type
@@ -112,18 +117,21 @@ func ParseFuncSignature(decl *ast.FuncDecl, objectTypeMap *ObjectTypeMap) (funcR
 			funcRet = tuple
 		}
 	}
-	return funcRet, funcName, funcParams, funcVars
+	return funcRet, funcName, funcParams, funcVars, retValues
 }
 
 func ParseCommonFuncDecl(decl *ast.FuncDecl, objectTypeMap *ObjectTypeMap) []string {
 	var ret []string
-	funcRet, funcName, funcParams, funcVars := ParseFuncSignature(decl, objectTypeMap)
+	funcRet, funcName, funcParams, funcVars, retValues := ParseFuncSignature(decl, objectTypeMap)
 	ret = append(ret, funcRet + " " + funcName + funcParams)
 	body := ParseBlockStmt(decl.Body, objectTypeMap)
-	ret = append(ret, "{")
-	ret = append(ret, funcVars)
-	ret = append(ret, body...)
-	ret = append(ret, "}")
+	strBody := strings.Join(body, "\n")
+	strBody = "{" + funcVars + strBody + "}"
+
+	if strings.Contains(strBody, "return;") {
+		strBody = strings.ReplaceAll(strBody, "return;", "return " + retValues + ";")
+	}
+	ret = append(ret, strBody)
 	return ret
 }
 
@@ -144,7 +152,7 @@ func ParseMemberFuncDecl(decl *ast.FuncDecl, objectTypeMap *ObjectTypeMap) []str
 	var rev string
 	var revObj string
 	rev, revObj = ParseFuncRev(decl.Recv)
-	funcRet, funcName, funcParams, funcVars := ParseFuncSignature(decl, objectTypeMap)
+	funcRet, funcName, funcParams, funcVars, retValues := ParseFuncSignature(decl, objectTypeMap)
 	// add struct type to function map
 	structFuncDeclMap[rev] = append(structFuncDeclMap[rev], funcRet + " " + funcName + funcParams + ";")
 	body := ParseBlockStmt(decl.Body, objectTypeMap)
@@ -152,6 +160,9 @@ func ParseMemberFuncDecl(decl *ast.FuncDecl, objectTypeMap *ObjectTypeMap) []str
 	strBody := strings.Join(body, "\n")
 	strBody = "{ " + funcVars + " " + strBody  + " }"
 	strBody = strings.ReplaceAll(strBody, revObj + ".", "this->")
+	if strings.Contains(strBody, "return;") {
+		strBody = strings.ReplaceAll(strBody, "return;", "return " + retValues + ";")
+	}
 
 	structFuncDefinitionMap[rev] = append(structFuncDefinitionMap[rev],
 		funcRet + " " + rev + "::" + funcName + funcParams + strBody)
