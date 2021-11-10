@@ -4,20 +4,25 @@ import (
 	"go/ast"
 	"go/token"
 	"log"
+	"strconv"
 	"strings"
 )
 
 func ParseGenDeclConst(decl *ast.GenDecl, objectTypeMap *ObjectTypeMap) []string {
 	var ret []string
-	for _, spec := range decl.Specs {
+
+	iotaStart := 0
+	incFlag := false
+	shiftFlag := false
+
+	for sIdx, spec := range decl.Specs {
 		if vs, ok := spec.(*ast.ValueSpec); ok {
 			var names []string
 			for _, name := range vs.Names {
 				names = append(names, name.Name)
 			}
 			var values []string
-
-			for _, value := range vs.Values {
+			for vIdx, value := range vs.Values {
 				if v, ok := value.(*ast.BasicLit); ok {
 					switch v.Kind {
 					case token.STRING:
@@ -35,8 +40,40 @@ func ParseGenDeclConst(decl *ast.GenDecl, objectTypeMap *ObjectTypeMap) []string
 					default:
 						log.Fatal("invalid basicLit type")
 					}
+				} else {
+					val := ParseExpr(value)
+					if strings.Contains(val, "iota") {
+						if vIdx != 0 {
+							log.Fatal("only one value when encounter iota")
+						}
+						if val == "iota" {
+							iotaStart = 0
+							incFlag = true
+							shiftFlag = false
+							values = append(values, "0")
+						} else if strings.Contains(val, "1<<iota") {
+							iotaStart = 0
+							incFlag = false
+							shiftFlag = true
+							values = append(values, "1ul")
+						} else {
+							log.Fatal("unknown value : " + val)
+						}
+					} else {
+						values = append(values, val)
+					}
 				}
 			}
+			if sIdx > 0 && len(vs.Values) == 0 {
+				if incFlag {
+					iotaStart++
+					values = append(values, strconv.Itoa(iotaStart))
+				} else if shiftFlag {
+					iotaStart++
+					values = append(values, "(1ul << " + strconv.Itoa(iotaStart) + ")")
+				}
+			}
+
 			if len(names) != len(values) {
 				if len(values) == 1 {
 					for _, name := range names {
@@ -46,7 +83,7 @@ func ParseGenDeclConst(decl *ast.GenDecl, objectTypeMap *ObjectTypeMap) []string
 					log.Print("invalid names size and values size")
 					log.Print("names: " + strings.Join(names, " "))
 					log.Print("values: " + strings.Join(values, " "))
-					// log.Fatal("invalid sizes")
+					log.Fatal("invalid sizes")
 				}
 			} else {
 				for i, name := range names {

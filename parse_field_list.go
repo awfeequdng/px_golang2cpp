@@ -27,7 +27,7 @@ func ParseFieldList(fieldList *ast.FieldList) []string {
 			}
 		} else {
 			if isTypeNamePair {
-				log.Print("exist type-name pair, so can not exit type only")
+				log.Print("exist type-name pair, so can not exist type only, type: " + typ)
 			}
 			ret = append(ret, typ)
 		}

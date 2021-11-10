@@ -20,7 +20,7 @@ func ParseFuncRev(list *ast.FieldList) (rec, obj string) {
 		rec = ParseExpr(starExpr.X)
 	} else {
 		// log.Fatal("rev's type is not StartExpr")
-		log.Print("rev's type is not StartExpr")
+		//log.Print("rev's type is not StartExpr")
 		rec = ParseExpr(list.List[0].Type)
 	}
 	return rec, obj
