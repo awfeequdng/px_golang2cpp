@@ -56,6 +56,11 @@ func ParseGenDeclConst(decl *ast.GenDecl, objectTypeMap *ObjectTypeMap) []string
 							incFlag = false
 							shiftFlag = true
 							values = append(values, "1ul")
+						} else if strings.Contains(val, "iota+1") {
+							iotaStart = 1
+							incFlag = false
+							shiftFlag = true
+							values = append(values, "1ul")
 						} else {
 							log.Fatal("unknown value : " + val)
 						}

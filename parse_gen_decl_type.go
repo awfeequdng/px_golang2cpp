@@ -20,6 +20,8 @@ func GetStructDeclAndDefinition() []string {
 	for name, decl := range GetStructDeclMap() {
 		if sig, ok := stFuncDeclMap[name]; ok {
 			lastBrace := strings.LastIndex(decl, "}")
+			log.Print("name: " + name)
+			log.Print("decl: " + decl)
 			decl = decl[:lastBrace]
 			ret = append(ret, "typedef ")
 			ret = append(ret, decl)
@@ -45,6 +47,10 @@ func ParseGenDeclType(decl *ast.GenDecl) []string {
 			name = ts.Name.Name
 			typ := ParseExpr(ts.Type)
 			//ret = append(ret, "typedef " + typ + " " + name + ";")
+			if !strings.Contains(typ, "struct") {
+				typ = "struct " + typ + "_struct { " + typ + " " + typ + "_" + typ + "; " +
+					"operator " + typ + "() const { return " + typ + "_" + typ + "; } }"
+			}
 			structDeclMap[name] = typ
 		} else {
 			log.Fatal("invalid spec type in ParseType function ")

@@ -18,6 +18,33 @@ func StrBetween(str, left, right string) string {
 	return str[lPos + len(left): rPos]
 }
 
+func InsertInitObjectMap(objectTypeMap *ObjectTypeMap) {
+	objectTypeMap.InsertObjectMap("n.Fields", "std::vector", "")
+	objectTypeMap.InsertObjectMap("n.Items", "std::vector", "")
+	objectTypeMap.InsertObjectMap("n.TableHints", "std::vector", "")
+	objectTypeMap.InsertObjectMap("n.Columns", "std::vector", "")
+	objectTypeMap.InsertObjectMap("n.Lists", "std::vector", "")
+	objectTypeMap.InsertObjectMap("list", "std::vector", "")
+	objectTypeMap.InsertObjectMap("n.Setlist", "std::vector", "")
+	objectTypeMap.InsertObjectMap("n.Keys", "std::vector", "")
+	objectTypeMap.InsertObjectMap("n.Options", "std::vector", "")
+	objectTypeMap.InsertObjectMap("n.Cols", "std::vector", "")
+	objectTypeMap.InsertObjectMap("n.Constraints", "std::vector", "")
+	objectTypeMap.InsertObjectMap("n.Tables", "std::vector", "")
+	objectTypeMap.InsertObjectMap("n.IndexPartSpecifications", "std::vector", "")
+	objectTypeMap.InsertObjectMap("n.NewColumns", "std::vector", "")
+	objectTypeMap.InsertObjectMap("n.NewConstraints", "std::vector", "")
+	objectTypeMap.InsertObjectMap("n.Specs", "std::vector", "")
+
+	// model.go
+	objectTypeMap.InsertObjectMap("t.Columns", "std::vector", "")
+	objectTypeMap.InsertObjectMap("t.Indices", "std::vector", "")
+	objectTypeMap.InsertObjectMap("t.ForeignKeys", "std::vector", "")
+	objectTypeMap.InsertObjectMap("index.Columns", "std::vector", "")
+	objectTypeMap.InsertObjectMap("db.Tables", "std::vector", "")
+	objectTypeMap.InsertObjectMap("idx.Columns", "std::vector", "")
+}
+
 func FindObjectMap(objectTypeMap *ObjectTypeMap, objName string) (typeName string,err error) {
 	// objName may be a function name or a temporary value
 	if v, ok := objectTypeMap.typeMap[objName]; ok {

@@ -82,6 +82,9 @@ func parseGolang(f *ast.File) []string {
 	ret = append(ret, GetSliceTemplate())	// slice template
 	ret = append(ret, GetDeferTemplte())	// defer template
 
+	// init object map
+	InsertInitObjectMap(&objectTypeMap)
+
 	for _, decl := range f.Decls {
 		if g, ok := decl.(*ast.GenDecl); ok {
 			ret = append(ret, ParseGenDecl(g, &objectTypeMap)...)

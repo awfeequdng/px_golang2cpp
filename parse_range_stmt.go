@@ -9,8 +9,8 @@ import (
 func ParseRangeStmt(stmt *ast.RangeStmt, objectTypeMap *ObjectTypeMap) []string {
 	var ret[]string
 
-	var key string
-	var val string
+	var key string = "nil"
+	var val string = "nil"
 	tok := stmt.Tok.String()
 
 	x := ParseExpr(stmt.X)
@@ -44,8 +44,12 @@ func ParseRangeStmt(stmt *ast.RangeStmt, objectTypeMap *ObjectTypeMap) []string 
 		// range for map
 		ret = append(ret, "for (" + keyValType + " [" + key + ", " + val + "] : " + x + ") {")
 	} else {
+		// range for array
 		if key == "_" {
 			ret = append(ret, "for (" + keyValType + " " + val + " : " + x + ") {")
+		} else if val == "nil" {
+			// only exist key
+			ret = append(ret, "for (" + keyValType + " " + key + " = 0; " + key + "< " + x + ".size(); " + key + "++ ) {")
 		} else {
 			ret = append(ret, "for (" + keyValType + " " + key + " = 0; " + key + "< " + x + ".size(); " + key + "++ ) {")
 			ret = append(ret, keyValType + val + " = " + x + "[" + key + "];")

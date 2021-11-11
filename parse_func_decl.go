@@ -3,6 +3,7 @@ package main
 import (
 	"go/ast"
 	"log"
+	"regexp"
 	"strings"
 )
 
@@ -172,7 +173,11 @@ func ParseMemberFuncDecl(decl *ast.FuncDecl, objectTypeMap *ObjectTypeMap) []str
 
 	strBody := strings.Join(body, "\n")
 	strBody = "{ " + funcVars + " " + strBody  + " }"
-	strBody = strings.ReplaceAll(strBody, revObj + ".", "this->")
+	//strBody = strings.ReplaceAll(strBody, revObj + ".", "this->")
+	//strBody = strings.ReplaceAll(strBody, revObj, "*this")
+	reg, _ := regexp.Compile("\\b" + revObj + "\\b")
+	strBody = reg.ReplaceAllString(strBody, "(*this)")
+
 	if strings.Contains(strBody, "return;") {
 		strBody = strings.ReplaceAll(strBody, "return;", "return " + retValues + ";")
 	}
