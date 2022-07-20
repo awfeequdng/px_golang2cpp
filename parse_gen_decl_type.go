@@ -28,6 +28,10 @@ func GetStructDeclAndDefinition() []string {
 			ret = append(ret, sig...)
 			ret = append(ret, "}")
 			ret = append(ret, name + ";")
+		} else {
+			ret = append(ret, "typedef ")
+			ret = append(ret, decl)
+			ret = append(ret, name + ";")
 		}
 	}
 
